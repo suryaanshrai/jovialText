@@ -34,6 +34,7 @@ CSRF_TRUSTED_ORIGINS = ['https://suryaanshrai-code50-102371942-g4wxv754jfpp99-80
 
 INSTALLED_APPS = [
     'network',
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,3 +123,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
