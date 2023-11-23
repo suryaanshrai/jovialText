@@ -6,11 +6,6 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from better_profanity import profanity
-from transformers import AutoModelForSequenceClassification
-from transformers import TFAutoModelForSequenceClassification
-from transformers import AutoTokenizer, AutoConfig
-import numpy as np
-from scipy.special import softmax
 
 
 from .models import User, Posts, Like, Follower
@@ -95,18 +90,6 @@ def createpost(request):
         if profanity.contains_profanity(post_content):
             return err_message(request,"Sorry, your post contains word/s that might be harsh.")
         
-        # Second Check
-        MODEL = f"cardiffnlp/twitter-roberta-base-sentiment-latest"
-        tokenizer = AutoTokenizer.from_pretrained(MODEL)
-        config = AutoConfig.from_pretrained(MODEL)
-        # PT
-        model = AutoModelForSequenceClassification.from_pretrained(MODEL)
-        encoded_input = tokenizer(post_content, return_tensors='pt')
-        output = model(**encoded_input)
-        scores = output[0][0].detach().numpy()
-        scores = softmax(scores)
-        if scores[0] > 0.7:
-            return err_message(request, "Sorry, your post is containing content that might be negative.")
         new_post = Posts(poster=poster, content=post_content)
         new_post.save()
         return HttpResponseRedirect(reverse("index"))
