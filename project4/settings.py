@@ -25,7 +25,10 @@ SECRET_KEY = '13kl@xtukpwe&xj2xoysxe9_6=tf@f8ewxer5n&ifnd46+6$%8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['21bcs091.pythonanywhere.com']
+ALLOWED_HOSTS = [
+    '21bcs091.pythonanywhere.com',
+    '127.0.0.1',
+                 ]
 
 CSRF_TRUSTED_ORIGINS = ['https://suryaanshrai-code50-102371942-g4wxv754jfpp99-8000.preview.app.github.dev']
 
@@ -46,6 +49,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
+
 ]
 
 MIDDLEWARE = [

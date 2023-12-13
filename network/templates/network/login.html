@@ -1,27 +1,191 @@
-{% extends "network/layout.html" %}
+{% load static %}
 {% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #c9c8c8;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
 
-{% block body %}
+      .signup-container {
+        padding: 30px;
+        display: flex;
+        max-width: 80vw;
+        max-height: 80vh;
+        background-color: #fff;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+          0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 8px;
+        overflow: hidden;
+      }
 
-    <h2>Login</h2>
+      .left-side {
+        flex: 1;
+        background: url("https://cdni.iconscout.com/illustration/premium/thumb/sign-up-4922762-4097209.png") center/cover no-repeat;
+      }
 
-    {% if message %}
+      .right-side {
+        flex: 1;
+        padding: 0 20px;
+      }
+      .right-side h1{
+        text-align: center;
+      }
+
+      a {
+        text-decoration: none;
+        color: black;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        box-sizing: border-box;
+      }
+
+      .password-container {
+        display: none;
+      }
+
+      .error-message {
+        color: #ff0000;
+        margin-top: 5px;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      label {
+        margin-bottom: 8px;
+      }
+
+      input {
+        padding: 8px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      span.psw {
+        margin-top: 4px;
+      }
+      .navigateSignUp {
+        margin-top: 20px;
+        font-size: small;
+        text-align: center;
+        color:#9b9b9b;
+      }
+      .googleButton {
+        padding: 6px;
+        background-color: #fff;
+        color:black;
+        border: solid;
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: center;
+      }
+      .or-divider {
+        text-align: center;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="signup-container">
+      <div class="left-side">
+        <img
+          src="https://cdni.iconscout.com/illustration/premium/thumb/sign-up-4922762-4097209.png"
+          alt="Placeholder Image"
+          width="100%"
+        />
+      </div>
+      <div class="right-side">
+        {% if message %}
         <div>{{ message }}</div>
     {% endif %}
+        <h1>Sign in</h1>
+        <form id="signup-form" action="{% url 'login' %}" method="post" onsubmit="return validateForm()">
+          {% csrf_token %}
+          <input type="text" name="username" id="username" placeholder="Username" required />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+            oninput="showPasswordConfirm()"
+            required
+          />
+          <div class="error-message" id="password-error-message"></div>
+  
+          <button type="submit">Sign In</button>
+          </form>
+          <div class="or-divider">
+            <hr />
+            <span class="or"> OR </span>
+          </div>
+        
+          <div class="googleButton">
+          <img alt="Google sign-in" src="{% static 'network/google.jpeg' %}" width="20px" />
+          <a href="{% provider_login_url 'google' %}">
+      Sign In with Google
+    </a>
+    </div>
+        </form>
+        <p>
+          
+        Don't have an account? <a style="text-decoration: underline; color: #007bff;" href="{% url 'register' %}">Register here</a>.
+        </p>
+      </div>
+    </div>
 
-    <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autofocus class="form-control" type="text" name="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Login">
-    </form>
+    <script>
+      function showPasswordConfirm() {
+        const passwordInput = document.getElementById("password");
+        const passwordConfirmContainer = document.getElementById(
+          "password-confirm-container"
+        );
 
-    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
-    OR 
-    <a href="{% provider_login_url 'google' %}">Use Google</a>
+        if (passwordInput.value.length > 0) {
+          passwordConfirmContainer.style.display = "block";
+        } else {
+          passwordConfirmContainer.style.display = "none";
+        }
+      }
 
-{% endblock %}
+      function validateForm() {
+        const passwordInput = document.getElementById("password");
+        const errorMessage = document.getElementById("password-error-message");
+
+        if (passwordInput.value.length < 7) {
+          errorMessage.innerText =
+            "Password must be at least 7 characters long";
+          return false;
+        } else {
+          errorMessage.innerText = "";
+          return true;
+        }
+      }
+    </script>
+  </body>
+</html>

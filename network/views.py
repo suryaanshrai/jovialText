@@ -62,7 +62,7 @@ def register(request):
             return render(
                 request, "network/register.html", {"message": "Username already taken."}
             )
-        login(request, user)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
