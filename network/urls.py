@@ -15,4 +15,6 @@ urlpatterns = [
     path("following", views.following_posts, name="following"),
     path("isloggedin", views.isloggedin, name="isloggedin"),
     path("editpost/<int:id>", views.editpost, name="editpost"),
+    path("searchTags", views.searchTags, name="searchTags"),
+
 ]

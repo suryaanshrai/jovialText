@@ -19,7 +19,16 @@
         <form action="{% url 'createpost' %}" method="post">
             {% csrf_token %}
             <textarea name="content" placeholder="We are eager to recieve your post!"></textarea>
+            <p>
+                <input style="min-width:90%" type="text" name="tags" placeholder="Add space separated tags">
+            </p>
             <input class="btn btn-primary btn-sm" type="submit">
+        </form>
+    </div>
+    <div style="text-align: right;"> 
+        <form action="{% url 'searchTags' %}" method="get" id="searchForm">
+            <input type="text" name="tags" placeholder="Search for tags">
+            <input type="submit" value="Search">
         </form>
     </div>
     <div>

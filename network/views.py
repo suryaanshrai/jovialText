@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from better_profanity import profanity
 
 
-from .models import User, Posts, Like, Follower
+from .models import User, Posts, Like, Follower, Tag
 
 
 def index(request):
@@ -87,11 +87,16 @@ def createpost(request):
         poster = request.user
         post_content = request.POST["content"]
         # First check
+        tags = request.POST["tags"].split()
+
         if profanity.contains_profanity(post_content):
             return err_message(request,"Sorry, your post contains word/s that might be harsh.")
         
         new_post = Posts(poster=poster, content=post_content)
         new_post.save()
+        for tag in tags:
+            new_tag = Tag(tag=tag.lower(), post=new_post)
+            new_tag.save()
         return HttpResponseRedirect(reverse("index"))
     else:
         return HttpResponse("Please login and submit the form. (Post method required)")
@@ -272,4 +277,22 @@ def editpost(request, id):
         return JsonResponse({"post_content": post_content,})
     return JsonResponse({
         "Response":"Invalid Request",
+    })
+
+
+def searchTags(request):
+    allPosts = list()
+    for tag in request.GET["tags"].split():
+        tag = tag.lower()
+        tagged_posts = Tag.objects.filter(tag=tag).values()
+        for post in tagged_posts:
+            thispost = Posts.objects.filter(id=post['post_id']).values()[0]
+            username = User.objects.get(id=thispost["poster_id"]).username
+            thispost["username"] = username
+            thispost["likecount"] = len(Like.objects.filter(post_id=thispost["id"]))
+            if thispost not in allPosts:
+                allPosts.append(thispost)
+            
+    return JsonResponse({
+        "allPosts":allPosts, 
     })

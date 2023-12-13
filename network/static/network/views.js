@@ -291,3 +291,19 @@ function pagination_buttons(pageCount, currentPage) {
         paginationdiv.append(nextbuttonform);
     }
 }
+
+let searchForm = document.querySelector('#searchForm');
+searchForm.onsubmit = () => {
+    let tags = searchForm.tags.value.split(" ");
+    let path="searchTags?tags=";
+    for (i in tags) {
+        path=path.concat(tags[i]+'+');
+    }
+    fetch(path)
+    .then(response => response.json())
+    .then(data => {
+        loadPosts(data);
+    });
+    document.querySelector("#paginatory").style.display = "none";
+    return false;
+}
