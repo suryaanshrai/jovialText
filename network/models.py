@@ -35,3 +35,11 @@ class Follower(models.Model):
 
     def __str__(self):
         return f"{self.follower} started following {self.following}"
+    
+
+class Tag(models.Model):
+    tag = models.CharField(max_length=50)
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE, related_name="post")
+
+    def __str__(self):
+        return f"{self.tag}:{self.post}"
