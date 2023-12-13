@@ -5,8 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from better_profanity import profanity
-
+from transformers import pipeline
 
 from .models import User, Posts, Like, Follower, Tag
 
@@ -81,6 +80,14 @@ def preprocess(text):
         new_text.append(t)
     return " ".join(new_text)
 
+def checkNegativeSentiment(text):
+    sentiment_pipeline = pipeline('sentiment-analysis')
+    analysis = sentiment_pipeline([text])
+    if analysis[0]['label'] == 'NEGATIVE':
+        return True
+    else:
+        return False
+
 @login_required
 def createpost(request):
     if request.method == "POST":
@@ -89,7 +96,7 @@ def createpost(request):
         # First check
         tags = request.POST["tags"].split()
 
-        if profanity.contains_profanity(post_content):
+        if checkNegativeSentiment(post_content):
             return err_message(request,"Sorry, your post contains word/s that might be harsh.")
         
         new_post = Posts(poster=poster, content=post_content)
@@ -272,6 +279,11 @@ def editpost(request, id):
                 "Response":"Inappropriate user",
             })
         post_content = request.POST["post_content"]
+        if checkNegativeSentiment(post_content):
+            return JsonResponse({
+                "post_content":post.content,
+                "Response":"The new content may contain inappropriate words or sentences",
+            })
         post.content = post_content
         post.save()
         return JsonResponse({"post_content": post_content,})
