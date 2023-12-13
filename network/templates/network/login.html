@@ -1,4 +1,5 @@
 {% extends "network/layout.html" %}
+{% load socialaccount %}
 
 {% block body %}
 
@@ -20,5 +21,7 @@
     </form>
 
     Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+    OR 
+    <a href="{% provider_login_url 'google' %}">Use Google</a>
 
 {% endblock %}
