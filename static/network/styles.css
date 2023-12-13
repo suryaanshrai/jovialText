@@ -1,0 +1,103 @@
+#AllPostsButton:hover {
+    cursor: pointer;
+}
+
+#TopRack {
+    text-align: right;
+}
+
+#TopRack * {
+    margin-right: 10px;
+    margin-bottom: 7px;
+}
+
+.post {
+    border: 1px solid black;
+    margin: 10px;
+    padding: 3px;
+}
+
+textarea {
+    margin: 10px;
+    padding: 10px;
+    height: 5cm;
+    width: 70%;
+    border-radius: 15px;
+}
+
+@keyframes enterFromRight {
+    0% {
+        opacity: 0;
+        padding-left: 1cm;
+    }
+
+    100% {
+        opacity: 1;
+        padding-left: 0cm;
+    }
+}
+
+@keyframes enterFromBottom {
+    0% {
+        opacity: 0;
+        margin-top: 2cm;
+    }
+
+    100% {
+        opacity: 1;
+        margin-top: 0;
+    }
+}
+
+#username {
+    font-size: 36px;
+    font-weight: bold;
+    padding-bottom: 15px;
+    animation-name: enterFromRight;
+    animation-duration: 2s;
+}
+
+
+.navbar {
+    animation-name: enterFromBottom;
+    animation-duration: 3s;
+}
+
+#UserBody {
+    padding: .5cm;
+}
+
+#belowFollowButton {
+    display: flex;
+    flex: wrap;
+}
+
+#belowFollowButton>div {
+    padding-right: 10px;
+    padding-top: 10px;
+}
+
+#CreatePost {
+    animation-name: enterFromRight;
+    animation-duration: 2s;
+}
+
+#following {
+    border: none;
+    background: none;
+}
+
+#paginatory {
+    text-align: center;
+
+}
+
+#paginatory * {
+    margin: 5px;
+    display: inline;
+}
+
+hr {
+    border: 1px solid gray;
+    opacity: 50%;
+}
