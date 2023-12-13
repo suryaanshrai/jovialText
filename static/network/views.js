@@ -76,7 +76,7 @@ function loadPosts(data) {
                     <i>${post.time}</i> <div id="toHide${post.id}"> <p class="postContent" id="toupdate${post.id}">${post.content}</p> <p id="post${post['id']}">Likes: ${post.likecount}</p></div>`;
                 let likeForm = document.createElement('form');
                 let likeButton = document.createElement('button');
-                likeButton.classList.add('btn', 'btn-primary', 'btn-sm');
+                likeButton.classList.add('btn', 'btn-primary', 'btn-sm', 'mybutton');
                 likeButton.type = 'submit';
                 likeButton.onclick = () => toggle(likeButton);
                 if (post['liked'] === false) {
@@ -192,7 +192,7 @@ function pagination(pageCount) {
             return false;
         }
         let submitbutton = document.createElement('button');
-        submitbutton.classList.add('btn', 'btn-outline-secondary', 'btn-sm');
+        submitbutton.classList.add('btn', 'btn-light', 'btn-sm');
         submitbutton.type = 'submit';
         submitbutton.innerHTML = i;
         myform.append(submitbutton);
@@ -290,4 +290,20 @@ function pagination_buttons(pageCount, currentPage) {
         pagination(pageCount);
         paginationdiv.append(nextbuttonform);
     }
+}
+
+let searchForm = document.querySelector('#searchForm');
+searchForm.onsubmit = () => {
+    let tags = searchForm.tags.value.split(" ");
+    let path="searchTags?tags=";
+    for (i in tags) {
+        path=path.concat(tags[i]+'+');
+    }
+    fetch(path)
+    .then(response => response.json())
+    .then(data => {
+        loadPosts(data);
+    });
+    document.querySelector("#paginatory").style.display = "none";
+    return false;
 }

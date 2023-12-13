@@ -11,6 +11,14 @@
     margin-bottom: 7px;
 }
 
+#imgLogo {
+    max-height: 3cm;
+}
+
+.mybutton {
+    margin-bottom:3px
+}
+
 .post {
     border-radius: 10px;
     margin: 20px;
@@ -38,7 +46,7 @@
 }
 
 .postContent {
-    font-size: larger;
+    font-size: .7cm;
     margin-top: 20px;
     font-family: 'serif oblique';
 }
@@ -50,9 +58,12 @@
     }
 }
 
-body {
+.body {
     background-color: rgb(160,160,160);
     background-image: url('/static/network/background.jpeg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 
