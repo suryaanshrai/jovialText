@@ -22,7 +22,7 @@
             <div class="post">
                 <i>{{post.time}}</i>
                 <div id="toHide{{post.id}}">
-                <p id="toupdate{{post.id}}">{{post.content}} </p>
+                <p id="toupdate{{post.id}}" class="postContent">{{post.content}} </p>
                 <p id="post{{post.id}}">Likes: {{post.likecount}}</p>
                 {% if user.is_authenticated %}
                 <form id="{{post.id}}form" onsubmit="LikePost({{post.id}}); return false">

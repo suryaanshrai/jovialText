@@ -73,7 +73,7 @@ function loadPosts(data) {
                 thispost.classList.add('post');
                 let userlink = document.createElement('a');
                 thispost.innerHTML = `<a href="/user/${post.username}"><b>${post.username}</b></a>
-                    <i>${post.time}</i> <div id="toHide${post.id}"> <p id="toupdate${post.id}">${post.content}</p> <p id="post${post['id']}">Likes: ${post.likecount}</p></div>`;
+                    <i>${post.time}</i> <div id="toHide${post.id}"> <p class="postContent" id="toupdate${post.id}">${post.content}</p> <p id="post${post['id']}">Likes: ${post.likecount}</p></div>`;
                 let likeForm = document.createElement('form');
                 let likeButton = document.createElement('button');
                 likeButton.classList.add('btn', 'btn-primary', 'btn-sm');
