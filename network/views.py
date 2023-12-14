@@ -72,14 +72,6 @@ def err_message(request, error_message):
         "error_message":error_message
     })
 
-def preprocess(text):
-    new_text = []
-    for t in text.split(" "):
-        t = '@user' if t.startswith('@') and len(t) > 1 else t
-        t = 'http' if t.startswith('http') else t
-        new_text.append(t)
-    return " ".join(new_text)
-
 def checkNegativeSentiment(text):
     sentiment_pipeline = pipeline('sentiment-analysis')
     analysis = sentiment_pipeline([text])
@@ -102,6 +94,8 @@ def createpost(request):
         new_post = Posts(poster=poster, content=post_content)
         new_post.save()
         for tag in tags:
+            if checkNegativeSentiment(tag):
+                return err_message(request, "Sorry your tag contains word/s that might be harsh.")
             new_tag = Tag(tag=tag.lower(), post=new_post)
             new_tag.save()
         return HttpResponseRedirect(reverse("index"))
@@ -110,6 +104,38 @@ def createpost(request):
 
 
 def getAllPosts(request):
+    allPosts = list(Posts.objects.values())
+    content = list()
+    for post in allPosts:
+        content.append(post['content'])
+    sentiment_pipeline = pipeline('sentiment-analysis')
+    analysis = sentiment_pipeline(content)
+    for i in range(len(allPosts)):
+        if analysis[i]['label'] == 'NEGATIVE':
+            continue
+        allPosts[i]['score'] = analysis[i]['score']
+        username = User.objects.get(id=allPosts[i]["poster_id"]).username
+        allPosts[i]["username"] = username
+        allPosts[i]["likecount"] = len(Like.objects.filter(post_id=allPosts[i]["id"]))
+        if request.user.is_authenticated:
+            liked = Like.objects.filter(
+                user=request.user, post=Posts.objects.get(id=allPosts[i]["id"])
+            )
+            if len(liked) == 0:
+                allPosts[i]["liked"] = False
+            else:
+                allPosts[i]["liked"] = True
+    allPosts.sort(key=lambda x:x['score'], reverse=True)
+    paginator = Paginator(allPosts, 10)
+    page_no = request.GET.get("page")
+    if page_no is None:
+        page_no = 1
+    page_obj = list(paginator.get_page(page_no))
+    return JsonResponse(
+        {"allPosts": page_obj, "pagecount": paginator.num_pages, "page": page_no}
+    )
+
+def getAllPostsChrono(request):
     allPosts = list(Posts.objects.values())
     for post in allPosts:
         username = User.objects.get(id=post["poster_id"]).username

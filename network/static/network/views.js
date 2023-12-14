@@ -36,6 +36,19 @@ function getAllPosts() {
         });
 }
 
+function getAllPostsChrono() {
+    fetch("/getAllPostsChrono")
+        .then(response => response.json())
+        .then(data => {
+
+            loadPosts(data);
+            pagination_buttons(data.pagecount, data.page);
+        });
+}
+
+document.querySelector("#AllPostsChronoLink").onclick = getAllPostsChrono;
+document.querySelector("#AllPostsLink").onclick = getAllPosts;
+
 function loadPage(pageName) {
     document.querySelectorAll('.pages').forEach((page) => {
         page.style.display = 'none';
