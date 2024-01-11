@@ -1,4 +1,4 @@
-# network
+# JovialText
 A Twitter like application with sentiment analysis to allow users to create posts, like a post, follow other user or view their profile page.
 
 
