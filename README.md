@@ -1,7 +1,5 @@
 # network
-A Twitter like application to allow users to create posts, like a post, follow other user or view their profile page.
-
-Video:https://youtu.be/4OZ9lo4J8-c
+A Twitter like application with sentiment analysis to allow users to create posts, like a post, follow other user or view their profile page.
 
 
 ## Running the application
