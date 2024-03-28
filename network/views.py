@@ -90,7 +90,7 @@ def createpost(request):
 
         if checkNegativeSentiment(post_content):
             return err_message(request,"Sorry, your post contains word/s that might be harsh.")
-        
+
         new_post = Posts(poster=poster, content=post_content)
         new_post.save()
         for tag in tags:
@@ -192,13 +192,16 @@ def userpage(request, username):
     postcount = len(allposts)
     for post in allposts:
         post["likecount"] = len(Like.objects.filter(post_id=post["id"]))
-        liked = Like.objects.filter(
-            user=request.user, post=Posts.objects.get(id=post["id"])
-        )
-        if len(liked) == 0:
-            post["liked"] = False
+        if request.user.is_authenticated:
+            liked = Like.objects.filter(
+                user=request.user, post=Posts.objects.get(id=post["id"])
+            )
+            if len(liked) == 0:
+                post["liked"] = False
+            else:
+                post["liked"] = True
         else:
-            post["liked"] = True
+            post["liked"] = False
     allposts.reverse()
     follower = len(user.followers.all())
     following = len(user.following.all())
@@ -330,7 +333,7 @@ def searchTags(request):
             thispost["likecount"] = len(Like.objects.filter(post_id=thispost["id"]))
             if thispost not in allPosts:
                 allPosts.append(thispost)
-            
+
     return JsonResponse({
-        "allPosts":allPosts, 
+        "allPosts":allPosts,
     })

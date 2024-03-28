@@ -1,7 +1,57 @@
-{% extends "network/layout.html" %}
 {% load static %}
 
-{% block body %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Jovial Text{% endblock %}</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+    </head>
+    <body>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href={%url 'index'%}><img id="imgLogo" src="{% static 'network/2.png' %}"></a>
+
+            <div>
+              <ul class="navbar-nav mr-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'userpage' user.username %}"><strong>{{ user.username }}</strong></a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                  <a class="nav-link" href={%url 'index'%}>All Posts</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <form id="followingButton">
+                            {% csrf_token %}
+                            <input class="nav-link" id="following" type="submit" value="Following">
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                {% endif %}
+              </ul>
+            </div>
+          </nav>
+
+        <div class="body">
+
     <div id="UserBody">
         <div id="username">
             {{username}}
@@ -36,6 +86,7 @@
                     </button>
                     <input type="hidden" name="id" value="{{post.id}}">
                 </form>
+                {% endif %}
                 </div>
                 {% if user.id == post.poster_id %}
                     <button class="btn btn-primary btn-sm" id="editButton{{post.id}}" onclick="editpost({{post.id}})">Edit</button>
@@ -45,10 +96,8 @@
                         <input class="btn btn-primary btn-sm" onclick="editPostSubmit({{post.id}})" type="button" value="Done">
                     </form>
                 {% endif %}
-                {% endif %}
             </div>
             {% endfor %}
-        </div>
     </div>
         {% if pagecount > 1 %}
         <div id="paginatory">
@@ -65,4 +114,7 @@
         </div>
         {% endif %}
         <script src="{% static 'network/userpage.js' %}"></script>
-{% endblock %}
+        </div>
+    </body>
+</html>
+
