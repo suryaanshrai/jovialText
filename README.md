@@ -1,8 +1,7 @@
-# network
-A Twitter like application to allow users to create posts, like a post, follow other user or view their profile page.
+# JovialText
+A Twitter like application with sentiment analysis to allow users to create posts, like a post, follow other user or view their profile page.
 
-Video:https://youtu.be/4OZ9lo4J8-c
-
+Site is live at: https://21bcs091.pythonanywhere.com/
 
 ## Running the application
 To locally run the application, do the following: 
