@@ -36,8 +36,8 @@ function getAllPosts() {
         });
 }
 
-function getAllPostsChrono() {
-    fetch("/getAllPostsChrono")
+function getAllPostsSenti() {
+    fetch("/getAllPostsSenti")
         .then(response => response.json())
         .then(data => {
 
@@ -46,7 +46,7 @@ function getAllPostsChrono() {
         });
 }
 
-document.querySelector("#AllPostsChronoLink").onclick = getAllPostsChrono;
+document.querySelector("#AllPostsSentiLink").onclick = getAllPostsSenti;
 document.querySelector("#AllPostsLink").onclick = getAllPosts;
 
 function loadPage(pageName) {

@@ -5,8 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from transformers import pipeline
-
+from textblob import TextBlob
 from .models import User, Posts, Like, Follower, Tag
 
 
@@ -73,9 +72,8 @@ def err_message(request, error_message):
     })
 
 def checkNegativeSentiment(text):
-    sentiment_pipeline = pipeline('sentiment-analysis')
-    analysis = sentiment_pipeline([text])
-    if analysis[0]['label'] == 'NEGATIVE':
+    score = TextBlob(text).sentiment.polarity
+    if score <= 0.5:
         return True
     else:
         return False
@@ -90,7 +88,7 @@ def createpost(request):
 
         if checkNegativeSentiment(post_content):
             return err_message(request,"Sorry, your post contains word/s that might be harsh.")
-
+        
         new_post = Posts(poster=poster, content=post_content)
         new_post.save()
         for tag in tags:
@@ -105,42 +103,34 @@ def createpost(request):
 
 def getAllPosts(request):
     allPosts = list(Posts.objects.values())
-    content = list()
-    for post in allPosts:
-        content.append(post['content'])
-    sentiment_pipeline = pipeline('sentiment-analysis')
-    analysis = sentiment_pipeline(content)
-    for i in range(len(allPosts)):
-        if analysis[i]['label'] == 'NEGATIVE':
-            continue
-        allPosts[i]['score'] = analysis[i]['score']
-        username = User.objects.get(id=allPosts[i]["poster_id"]).username
-        allPosts[i]["username"] = username
-        allPosts[i]["likecount"] = len(Like.objects.filter(post_id=allPosts[i]["id"]))
-        if request.user.is_authenticated:
-            liked = Like.objects.filter(
-                user=request.user, post=Posts.objects.get(id=allPosts[i]["id"])
-            )
-            if len(liked) == 0:
-                allPosts[i]["liked"] = False
-            else:
-                allPosts[i]["liked"] = True
-    allPosts.sort(key=lambda x:x['score'], reverse=True)
     paginator = Paginator(allPosts, 10)
     page_no = request.GET.get("page")
     if page_no is None:
         page_no = 1
     page_obj = list(paginator.get_page(page_no))
+    for i in range(len(page_obj)):
+        username = User.objects.get(id=page_obj[i]["poster_id"]).username
+        page_obj[i]["username"] = username
+        page_obj[i]["likecount"] = len(Like.objects.filter(post_id=page_obj[i]["id"]))
+        if request.user.is_authenticated:
+            liked = Like.objects.filter(
+                user=request.user, post=Posts.objects.get(id=page_obj[i]["id"])
+            )
+            if len(liked) == 0:
+                page_obj[i]["liked"] = False
+            else:
+                page_obj[i]["liked"] = True
     return JsonResponse(
         {"allPosts": page_obj, "pagecount": paginator.num_pages, "page": page_no}
     )
 
-def getAllPostsChrono(request):
+def getAllPostsSenti(request):
     allPosts = list(Posts.objects.values())
     for post in allPosts:
         username = User.objects.get(id=post["poster_id"]).username
         post["username"] = username
         post["likecount"] = len(Like.objects.filter(post_id=post["id"]))
+        post["score"] = TextBlob(post["content"]).sentiment.polarity
         if request.user.is_authenticated:
             liked = Like.objects.filter(
                 user=request.user, post=Posts.objects.get(id=post["id"])
@@ -149,7 +139,7 @@ def getAllPostsChrono(request):
                 post["liked"] = False
             else:
                 post["liked"] = True
-    allPosts.reverse()
+    allPosts.sort(key=lambda x:x["score"], reverse=True)
     paginator = Paginator(allPosts, 10)
     page_no = request.GET.get("page")
     if page_no is None:
@@ -200,8 +190,6 @@ def userpage(request, username):
                 post["liked"] = False
             else:
                 post["liked"] = True
-        else:
-            post["liked"] = False
     allposts.reverse()
     follower = len(user.followers.all())
     following = len(user.following.all())
@@ -333,7 +321,7 @@ def searchTags(request):
             thispost["likecount"] = len(Like.objects.filter(post_id=thispost["id"]))
             if thispost not in allPosts:
                 allPosts.append(thispost)
-
+            
     return JsonResponse({
-        "allPosts":allPosts,
+        "allPosts":allPosts, 
     })
