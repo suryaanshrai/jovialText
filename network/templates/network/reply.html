@@ -1,5 +1,7 @@
 {% load static %}
 
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -12,13 +14,11 @@
         <link href="{% static 'network/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <div style="text-align: center;">
-
-            <a class="navbar-brand" id="AllPostsSentiLink"><img id="imgLogo" src="{% static 'network/2.png' %}"></a>
-            <div style="display: inline-block;">
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <!-- Not used hyperlinks to the routes as the javascript handles the clicks on these buttons -->
+            <a class="navbar-brand" href={%url 'index'%}><img id="imgLogo" src="{% static 'network/2.png' %}"></a>
+
+            <div>
               <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
@@ -26,15 +26,9 @@
                     </li>
                 {% endif %}
                 <li class="nav-item">
-                  <a class="nav-link" id="AllPostsLink">All Posts</a>
+                  <a class="nav-link" href={%url 'index'%}>All Posts</a>
                 </li>
                 {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <form id="followingButton">
-                            {% csrf_token %}
-                            <input class="nav-link" id="following" type="submit" value="Following">
-                        </form>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
                     </li>
@@ -47,12 +41,23 @@
                     </li>
                 {% endif %}
               </ul>
-            </nav>
-        </div></div>
+            </div>
+          </nav>
 
-        <div class="body">
-            {% block body %}
-            {% endblock %}
+          <div class="post">
+            <i>{{post.time}}</i>
+            <div id="toHide{{post.id}}">
+            <p id="toupdate{{post.id}}" class="postContent">{{post.content}} </p>
+            </div>
+            {% if user.id == post.poster_id %}
+                <button class="btn btn-primary btn-sm" id="editButton{{post.id}}" onclick="editpost({{post.id}})">Edit</button>
+                <form id="editForm{{post.id}}" style="display:none">
+                    <textarea id="editText{{post.id}}" name="post_content">{{post.content}}</textarea>
+                    {% csrf_token %}
+                    <input class="btn btn-primary btn-sm" onclick="editPostSubmit({{post.id}})" type="button" value="Done">
+                </form>
+            {% endif %}
         </div>
     </body>
 </html>
+

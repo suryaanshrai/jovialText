@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from textblob import TextBlob
-from .models import User, Posts, Like, Follower, Tag
+from .models import User, Posts, Like, Follower, Tag, Reply
 
 
 def index(request):
@@ -73,7 +73,7 @@ def err_message(request, error_message):
 
 def checkNegativeSentiment(text):
     score = TextBlob(text).sentiment.polarity
-    if score <= 0.5:
+    if score <= 0.3:
         return True
     else:
         return False
@@ -103,6 +103,7 @@ def createpost(request):
 
 def getAllPosts(request):
     allPosts = list(Posts.objects.values())
+    allPosts.reverse()
     paginator = Paginator(allPosts, 10)
     page_no = request.GET.get("page")
     if page_no is None:
@@ -111,6 +112,9 @@ def getAllPosts(request):
     for i in range(len(page_obj)):
         username = User.objects.get(id=page_obj[i]["poster_id"]).username
         page_obj[i]["username"] = username
+        time_t = page_obj[i]["time"]
+        time_s = time_t.strftime("%d-%m-%Y at %H:%M")
+        page_obj[i]["time"] = time_s
         page_obj[i]["likecount"] = len(Like.objects.filter(post_id=page_obj[i]["id"]))
         if request.user.is_authenticated:
             liked = Like.objects.filter(
@@ -325,3 +329,17 @@ def searchTags(request):
     return JsonResponse({
         "allPosts":allPosts, 
     })
+
+def addReply(request):
+    if request.method == "GET":
+        post_id = request.GET["post_id"]
+        post = Posts.objects.get(id=post_id)
+        replies = Reply.objects.filter(replied_to=post)
+        return render(request, "network/reply.html", {
+            "post":post,
+            "replies":replies,
+        })
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return HttpResponse("Invalid Request", status=401)
+        

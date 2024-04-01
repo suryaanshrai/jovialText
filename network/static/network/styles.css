@@ -159,3 +159,16 @@ hr {
     border: 1px solid gray;
     opacity: 50%;
 }
+
+.userPic {
+    max-width: 10cm;
+    max-height: 10cm;
+    background-color: white;
+    border: 1px solid black;
+}
+
+@media (max-width:650px) {
+    .userPic {
+        max-width: 100%;
+    }
+}
