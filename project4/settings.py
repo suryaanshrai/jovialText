@@ -28,15 +28,12 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '21bcs091.pythonanywhere.com',
     '127.0.0.1',
-                 ]
-
-CSRF_TRUSTED_ORIGINS = ['https://suryaanshrai-code50-102371942-g4wxv754jfpp99-8000.preview.app.github.dev']
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'network',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,13 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'network',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-
-
 ]
 
 MIDDLEWARE = [
@@ -61,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "allauth.account.middleware.AccountMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'project4.urls'

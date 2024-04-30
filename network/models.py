@@ -44,6 +44,3 @@ class Tag(models.Model):
     def __str__(self):
         return f"{self.tag}:{self.post}"
     
-
-class Reply(Posts):
-    repliedTo = models.ForeignKey(Posts, on_delete=models.CASCADE, related_name="replied_to")

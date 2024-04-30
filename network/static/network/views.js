@@ -74,6 +74,8 @@ if (followingButton != null) {
 
 function loadPosts(data) {
     console.log(data);
+    document.querySelector("#spinner").style.opacity = 1;
+
     document.querySelector("#AllPosts").innerHTML = "";
     var isloggedin = false;
     fetch('/isloggedin').
@@ -148,7 +150,7 @@ function loadPosts(data) {
                     return false;
                 }
                 editSubmit.onclick = () => {
-                    fetch(`/editpost/${post.id}`, {
+                    fetch(`/editpost/${post.id}/`, {
                             method: "POST",
                             body: new FormData(editForm),
                             headers: {
@@ -186,6 +188,9 @@ function loadPosts(data) {
                 document.querySelector('#AllPosts').append(thispost);
             });
         }
+        setTimeout(()=> {
+            document.querySelector('#spinner').style.opacity = 0;
+        }, 1500)
     });
 }
 

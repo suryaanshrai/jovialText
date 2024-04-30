@@ -14,10 +14,10 @@
     <body>
         <div style="text-align: center;">
 
-            <a class="navbar-brand" id="AllPostsSentiLink"><img id="imgLogo" src="{% static 'network/2.png' %}"></a>
+            <a class="navbar-brand" id="AllPostsSentiLink"><img id="imgLogo" src="{% static 'network/2.jpg' %}"></a>
             <div style="display: inline-block;">
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-black">
             <!-- Not used hyperlinks to the routes as the javascript handles the clicks on these buttons -->
               <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
@@ -26,30 +26,29 @@
                     </li>
                 {% endif %}
                 <li class="nav-item">
-                  <a class="nav-link" id="AllPostsLink">All Posts</a>
+                  <a class="nav-link" id="AllPostsLink"><span>All Posts</span></a>
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <form id="followingButton">
                             {% csrf_token %}
-                            <input class="nav-link" id="following" type="submit" value="Following">
-                        </form>
+                                <input id="following" class="nav-link" style="color:white !important" type="submit" value="Following">
+                            </form>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                            <a class="nav-link" href="{% url 'logout' %}"><span>Log Out</span></a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                        <a class="nav-link" href="{% url 'login' %}"><span>Log In</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        <a class="nav-link" href="{% url 'register' %}"><span>Register</span></a>
                     </li>
                 {% endif %}
               </ul>
-            </nav>
-        </div></div>
-
+            </nav>       
+            </div>         
         <div class="body">
             {% block body %}
             {% endblock %}
