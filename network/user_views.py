@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.db import IntegrityError
-from .models import User, Follower
+from .models import User, Follower, UserPic, UserBio
 
 
 def login_view(request):
@@ -101,3 +101,31 @@ def follow(request, tofollow):
         return HttpResponseRedirect(reverse("userpage", args=(tofollow,)))
     followObj.delete()
     return HttpResponseRedirect(reverse("userpage", args=(tofollow,)))
+
+@login_required
+def changePic(request):
+    if request.method == "POST":
+        image = request.FILES["image"]
+        try:
+            curr_pic = UserPic.objects.get(user=request.user)
+            curr_pic.delete()
+            new_pic = UserPic(pic=image, user=request.user)
+            new_pic.save()
+        except:
+            new_pic = UserPic(pic=image, user=request.user)
+            new_pic.save()
+        return HttpResponseRedirect(reverse("userpage", args=(request.user,)))
+    
+@login_required
+def changeBio(request):
+    if request.method == "POST":
+        bio = request.POST["bio"]
+        try:
+            curr_bio = UserBio.objects.get(user=request.user)
+            curr_bio.bio = bio
+            curr_bio.save() 
+        except:
+            new_bio = UserBio(bio=bio, user=request.user)
+            new_bio.save()
+        return HttpResponseRedirect(reverse("userpage", args=(request.user,)))
+    

@@ -44,3 +44,14 @@ class Tag(models.Model):
     def __str__(self):
         return f"{self.tag}:{self.post}"
     
+class UserPic(models.Model):
+    pic = models.ImageField(upload_to="network/static/network/profilePics")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    def delete(self, *args, **kwargs):
+       self.pic.delete()
+       super().delete(*args, **kwargs)
+
+class UserBio(models.Model):
+    bio = models.TextField(max_length=256)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

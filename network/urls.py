@@ -15,6 +15,8 @@ urlpatterns = [
     path("register/", user_views.register, name="register"),
     path("isloggedin/", user_views.isloggedin, name="isloggedin"),
     path("follow/<str:tofollow>/", user_views.follow, name="follow"),
+    path("changepic/", user_views.changePic, name="changePic"),
+    path("changeBio/", user_views.changeBio, name="changeBio"),
     path('accounts/', include('allauth.urls')),
 
     path("createpost/", post_views.createpost, name="createpost"),

@@ -58,7 +58,6 @@ nav *{
 
 }
 .postContent {
-    font-size: .7cm;
     margin-top: 20px;
     font-family: 'serif oblique';
     
@@ -143,11 +142,6 @@ textarea {
 #belowFollowButton {
     display: flex;
     flex: wrap;
-}
-
-#belowFollowButton>div {
-    padding-right: 10px;
-    padding-top: 10px;
 }
 
 #CreatePost {

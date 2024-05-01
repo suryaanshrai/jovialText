@@ -49,8 +49,47 @@
         <div id="username">
             {{username}}
         </div>
+        <p style="text-align: center; color:rgb(165, 186, 255)">
+            {{userbio.bio}}
+        </p>
         <div>
-            {% if user.is_authenticated and user.username != username %}
+            {% if user.is_authenticated and user.username == username %}
+                <form action="{% url 'changePic' %}" method="post" style="display: none;" id="picChangeForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="image" required>
+                    <input type="submit" class="btn btn-primary btn-sm" value="Upload">
+                </form>
+                <button class="btn btn-outline-info btn-sm" id="picChangebtn" style="margin-bottom: 10px;">Change Profile Picture</button>
+                <script>
+                    document.querySelector("#picChangebtn").onclick = () => {
+                        if (document.querySelector("#picChangebtn").innerHTML == "Change Profile Picture") {
+                            document.querySelector("#picChangeForm").style.display = "block";
+                            document.querySelector("#picChangebtn").innerHTML = "Cancel"
+                        } else {
+                            document.querySelector("#picChangeForm").style.display = "none";
+                            document.querySelector("#picChangebtn").innerHTML = "Change Profile Picture"
+                        }
+                    };
+                </script>
+
+                <form action="{% url 'changeBio' %}" method="post" style="display: none;" id="bioChangeForm">
+                    {% csrf_token %}
+                    <input type="text" name="bio" required style="border:1px solid blue; color:white">
+                    <input type="submit" class="btn btn-primary btn-sm" value="Change">
+                </form>
+                <button class="btn btn-outline-info btn-sm" id="bioChangebtn" style="margin-bottom: 10px;">Change Bio</button>
+                <script>
+                    document.querySelector("#bioChangebtn").onclick = () => {
+                        if (document.querySelector("#bioChangebtn").innerHTML == "Change Bio") {
+                            document.querySelector("#bioChangeForm").style.display = "block";
+                            document.querySelector("#bioChangebtn").innerHTML = "Cancel"
+                        } else {
+                            document.querySelector("#bioChangeForm").style.display = "none";
+                            document.querySelector("#bioChangebtn").innerHTML = "Change Bio"
+                        }
+                    };
+                </script>
+            {% else %}
             <form action="{% url 'follow' username %}">
                 {% csrf_token %}
                 <button class="btn btn-primary btn-sm" type="submit">{% if follow_status %} Unfollow {% else %} Follow {% endif %}</button>

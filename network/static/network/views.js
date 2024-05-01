@@ -88,10 +88,10 @@ function loadPosts(data) {
                 thispost.classList.add('post');
                 let userlink = document.createElement('a');
                 thispost.innerHTML = `<a href="/user/${post.username}"><b>${post.username}</b></a>
-                    <i>${post.time}</i> <div id="toHide${post.id}"> <p class="postContent" id="toupdate${post.id}">${post.content}</p> <p id="post${post['id']}">Likes: ${post.likecount}</p></div>`;
+                    <i>${post.time}</i> <div id="toHide${post.id}"> <p class="postContent" id="toupdate${post.id}">${post.content}</p> <p id="post${post['id']}"><span style="color:gray">Likes: ${post.likecount}</span></p></div>`;
                 let likeForm = document.createElement('form');
                 let likeButton = document.createElement('button');
-                likeButton.classList.add('btn', 'btn-primary', 'btn-sm', 'mybutton');
+                likeButton.classList.add('btn', 'btn-outline-info', 'btn-sm', 'mybutton');
                 likeButton.type = 'submit';
                 likeButton.onclick = () => toggle(likeButton);
                 if (post['liked'] === false) {
@@ -119,7 +119,7 @@ function loadPosts(data) {
                         .then(likereponse => likereponse.json())
                         .then(likedata => {
                             console.log(likedata);
-                            document.querySelector(`#post${post.id}`).innerHTML = `Likes: ${likedata.newlikecount}`;
+                            document.querySelector(`#post${post.id}`).innerHTML = `<span style="color:gray">Likes: ${likedata.newlikecount}</span>`;
                         })
                     return false;
                 }
@@ -131,6 +131,7 @@ function loadPosts(data) {
                 let editForm = document.createElement('form');
 
                 editText.style.display = "none";
+                editText.style.color="white";
                 editText.name = "post_content";
                 editButton.innerHTML = "Edit";
                 editButton.onclick = () => {
@@ -142,7 +143,7 @@ function loadPosts(data) {
                     likeForm.style.display = "none";
                 }
 
-                editButton.classList.add('btn', 'btn-primary', 'btn-sm');
+                editButton.classList.add('btn', 'btn-outline-info', 'btn-sm');
                 editSubmit.classList.add('btn', 'btn-primary', 'btn-sm');
                 editSubmit.style.display = "none";
                 editSubmit.innerHTML = "Done";
