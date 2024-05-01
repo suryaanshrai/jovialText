@@ -55,7 +55,8 @@
             {{userbio.bio}}
         </p>
         <div>
-            {% if user.is_authenticated and user.username == username %}
+            {% if user.is_authenticated %}
+                {% if user.username == username %}
                 <form action="{% url 'changePic' %}" method="post" style="display: none;" id="picChangeForm" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input type="file" name="image" required>
@@ -96,6 +97,7 @@
                 {% csrf_token %}
                 <button class="btn btn-primary btn-sm" type="submit">{% if follow_status %} Unfollow {% else %} Follow {% endif %}</button>
             </form>
+            {% endif %}
             {% endif %}
         </div>
         <div id="belowFollowButton" style="display: inline-block;">
