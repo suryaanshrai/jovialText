@@ -50,7 +50,7 @@ def getAllPosts(request):
             pic_obj = UserPic.objects.get(user=User.objects.get(username=username))
         except:
             pic_obj = UserPic.objects.get(user=User.objects.get(username="master"))
-        userpic = pic_obj.pic.name[7:]
+        userpic = pic_obj.pic.url
         page_obj[i]["userpic"] = userpic
         time_t = page_obj[i]["time"]
         time_s = time_t.strftime("%d-%m-%Y at %H:%M")
@@ -92,7 +92,7 @@ def getAllPostsSenti(request):
             pic_obj = UserPic.objects.get(user=User.objects.get(username=username))
         except:
             pic_obj = UserPic.objects.get(user=User.objects.get(username="master"))
-        userpic = pic_obj.pic.name[7:]
+        userpic = pic_obj.pic.url
         page_obj[i]["userpic"] = userpic
         if request.user.is_authenticated:
             liked = Like.objects.filter(user=request.user, post=Posts.objects.get(id=page_obj[i]["id"]))
@@ -123,7 +123,7 @@ def searchTags(request):
                 pic_obj = UserPic.objects.get(user=User.objects.get(username=username))
             except:
                 pic_obj = UserPic.objects.get(user=User.objects.get(username="master"))
-            thispost["userpic"] = pic_obj.pic.name[7:]
+            thispost["userpic"] = pic_obj.pic.url
             if thispost not in allPosts:
                 allPosts.append(thispost)
     return JsonResponse({"allPosts":allPosts, })
@@ -171,7 +171,7 @@ def userpage(request, username):
         pic_obj = UserPic.objects.get(user=User.objects.get(username=username))
     except:
         pic_obj = UserPic.objects.get(user=User.objects.get(username="master"))
-    userpic = pic_obj.pic.name[7:]
+    userpic = pic_obj.pic.url
     return render(request, "network/userpage.html",
         {
             "username": username,

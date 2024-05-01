@@ -45,7 +45,7 @@ class Tag(models.Model):
         return f"{self.tag}:{self.post}"
     
 class UserPic(models.Model):
-    pic = models.ImageField(upload_to="network/static/network/profilePics")
+    pic = models.ImageField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def delete(self, *args, **kwargs):
