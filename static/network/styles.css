@@ -1,9 +1,21 @@
+html * {
+    background-color: black;
+}
+
+body {
+    color: white;
+}
+
+nav *{
+    color: white;
+}
+
 #AllPostsButton:hover {
     cursor: pointer;
 }
 
 #TopRack {
-    text-align: right;
+    text-align: center;
 }
 
 #TopRack * {
@@ -11,7 +23,7 @@
     margin-bottom: 7px;
 }
 
-#AllPostsChronoLink:hover {
+#AllPostsSentiLink:hover {
     cursor: pointer;
 }
 
@@ -36,27 +48,19 @@
     margin-right: auto;
     padding: 0.5cm;
     max-width: 15cm;
-    box-shadow: 1px 1px 8px 8px gray;
     min-height: 5cm;
-    background-color: white;
-    /* width:500px;
-    padding: 40px 0;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 300px;
-    background-color: whitesmoke;
-    margin-left:350px;
-    margin-top: 100px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+    background-color: #101010;
+    margin-bottom: 1cm;
+    animation: glow 8s  infinite;
 }
+.post * {
+    background-color: #101010;
 
+}
 .postContent {
-    font-size: .7cm;
     margin-top: 20px;
     font-family: 'serif oblique';
+    
 }
 
 @media (max-width:650px) {
@@ -67,8 +71,6 @@
 }
 
 .body {
-    background-color: rgb(160,160,160);
-    background-image: url('/static/network/background.jpeg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -107,6 +109,18 @@ textarea {
     }
 }
 
+@keyframes glow {
+    0% {
+        box-shadow: 0.2px 0.2px 4px 4px rgba(0, 0, 167, 0.41);
+    }
+    50% {
+        box-shadow: 1px 1px 8px 8px rgba(74, 74, 255, 0.481);
+    }
+    100% {
+        box-shadow: 0.2px 0.2px 4px 4px rgba(0, 0, 167, 0.41);;
+    }
+}
+
 #username {
     font-size: 36px;
     font-weight: bold;
@@ -128,11 +142,6 @@ textarea {
 #belowFollowButton {
     display: flex;
     flex: wrap;
-}
-
-#belowFollowButton>div {
-    padding-right: 10px;
-    padding-top: 10px;
 }
 
 #CreatePost {
@@ -158,4 +167,47 @@ textarea {
 hr {
     border: 1px solid gray;
     opacity: 50%;
+}
+
+.userPic {
+    height: 10cm;
+    width: auto;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.userPicDiv {
+    width: 10cm;
+    height: 10cm;
+    overflow: hidden;
+    outline:3px solid white;
+    border-radius: 50cm;
+    text-align: center;
+    display: inline-block;
+}
+
+.picIcon {
+    height: 1cm;
+    width: auto;    
+}
+
+.picIconDiv {
+    width: 1cm;
+    height: 1cm;
+    overflow: hidden;
+    outline:1px solid white;
+    border-radius: 50cm;
+    text-align: center;
+    display: inline-block;
+}
+
+@media (max-width:650px) {
+    .userPic {
+        height: 6cm;
+        width: auto;
+    }
+    .userPicDiv {
+        width: 6cm;
+        height: 6cm;
+    }
 }
