@@ -45,7 +45,9 @@
         <div class="body">
 
     <div id="UserBody">
-        <!-- <div style="box-shadow: 1cm;"><img class="userPic" src="{% static 'network/google.jpeg' %}"></div> -->
+        <div class="userPicDiv">
+                <img class="userPic" src="{{userpic}}">
+        </div>
         <div id="username">
             {{username}}
         </div>
@@ -57,7 +59,7 @@
                 <form action="{% url 'changePic' %}" method="post" style="display: none;" id="picChangeForm" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input type="file" name="image" required>
-                    <input type="submit" class="btn btn-primary btn-sm" value="Upload">
+                    <input type="submit" class="btn btn-primary btn-sm" value="Change">
                 </form>
                 <button class="btn btn-outline-info btn-sm" id="picChangebtn" style="margin-bottom: 10px;">Change Profile Picture</button>
                 <script>
@@ -102,14 +104,21 @@
         <div>
             {% for post in posts %}
             <div class="post">
-                <i>{{post.time}}</i>
+                <div style="display: flex;">
+                    <div class="picIconDiv">
+                        <img src="{{userpic}}" class="picIcon">
+                    </div>
+                    <div style="display:inline-block; margin-top: 5px;margin-left: 10px;">
+                        <i>{{post.time}}</i>
+                    </div>
+                </div>
                 <div id="toHide{{post.id}}">
                 <p id="toupdate{{post.id}}" class="postContent">{{post.content}} </p>
                 <p id="post{{post.id}}">Likes: {{post.likecount}}</p>
                 {% if user.is_authenticated %}
                 <form id="{{post.id}}form" onsubmit="LikePost({{post.id}}); return false">
 
-                    <button class="btn btn-primary btn-sm" id="button{{post.id}}" type="submit">
+                    <button class="btn btn-primary btn-sm" id="button{{post.id}}" type="submit" style="margin-bottom: 5px;">
                         {% if post.liked %}
                             Unlike
                         {% else %}

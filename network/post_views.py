@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from .home_views import checkNegativeSentiment, err_message
-from .models import Posts, Tag, Like, User
+from .models import Posts, Tag, Like, User, UserPic
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.core.paginator import Paginator
@@ -83,18 +83,28 @@ def following_posts(request):
     for user in User.objects.get(username=request.user.username).following.all():
         allPosts += user.following.posts.values()
     allPosts.sort(key=lambda x: x["id"])
-    for post in allPosts:
-        post["username"] = User.objects.get(id=post["poster_id"]).username
-        post["likecount"] = len(Like.objects.filter(post_id=post["id"]))
-        if request.user.is_authenticated:
-            liked = Like.objects.filter(user=request.user, post=Posts.objects.get(id=post["id"]))
-            if len(liked) == 0:
-                post["liked"] = False
-            else:
-                post["liked"] = True
     paginator = Paginator(allPosts, 10)
     page_no = request.GET.get("page")
     if page_no is None:
         page_no = 1
     page_obj = list(paginator.get_page(page_no))
+    for i in range(len(page_obj)):
+        username = User.objects.get(id=page_obj[i]["poster_id"]).username
+        page_obj[i]["username"] = username
+        time_t = page_obj[i]["time"]
+        time_s = time_t.strftime("%d-%m-%Y at %H:%M")
+        page_obj[i]["time"] = time_s
+        page_obj[i]["likecount"] = len(Like.objects.filter(post_id=page_obj[i]["id"]))
+        try:
+            pic_obj = UserPic.objects.get(user=User.objects.get(username=username))
+        except:
+            pic_obj = UserPic.objects.get(user=User.objects.get(username="master"))
+        userpic = pic_obj.pic.name[7:]
+        page_obj[i]["userpic"] = userpic
+        if request.user.is_authenticated:
+            liked = Like.objects.filter(user=request.user, post=Posts.objects.get(id=page_obj[i]["id"]))
+            if len(liked) == 0:
+                page_obj[i]["liked"] = False
+            else:
+                page_obj[i]["liked"] = True
     return JsonResponse({"allPosts": page_obj, "pagecount": paginator.num_pages, "page": page_no})

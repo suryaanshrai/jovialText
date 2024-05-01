@@ -27,7 +27,7 @@ function toggle(button) {
 }
 
 function getAllPosts() {
-    fetch("/getAllPosts")
+    fetch("/getAllPosts/")
         .then(response => response.json())
         .then(data => {
 
@@ -37,7 +37,7 @@ function getAllPosts() {
 }
 
 function getAllPostsSenti() {
-    fetch("/getAllPostsSenti")
+    fetch("/getAllPostsSenti/")
         .then(response => response.json())
         .then(data => {
 
@@ -62,7 +62,7 @@ let followingButton = document.querySelector("#followingButton");
 
 if (followingButton != null) {
     followingButton.onsubmit = () => {
-        fetch('/following')
+        fetch('/following/')
             .then(response => response.json())
             .then(data => {
                 loadPosts(data);
@@ -78,7 +78,7 @@ function loadPosts(data) {
 
     document.querySelector("#AllPosts").innerHTML = "";
     var isloggedin = false;
-    fetch('/isloggedin').
+    fetch('/isloggedin/').
     then(response => response.json()).
     then(x => {
         console.log(x.isloggedin);
@@ -86,9 +86,11 @@ function loadPosts(data) {
             data.allPosts.forEach(post => {
                 let thispost = document.createElement('div');
                 thispost.classList.add('post');
-                let userlink = document.createElement('a');
-                thispost.innerHTML = `<a href="/user/${post.username}"><b>${post.username}</b></a>
-                    <i>${post.time}</i> <div id="toHide${post.id}"> <p class="postContent" id="toupdate${post.id}">${post.content}</p> <p id="post${post['id']}"><span style="color:gray">Likes: ${post.likecount}</span></p></div>`;
+                thispost.innerHTML = `<div style="display: flex;"> <div class="picIconDiv"><img src=${post.userpic} class="picIcon"></div> 
+                    <div style="display:inline-block; margin-top: 5px;margin-left: 10px;">
+                    <a href="/user/${post.username}"><b>${post.username}</b></a> <i>${post.time}</i> </div> </div>
+                     <div id="toHide${post.id}"> <p class="postContent" id="toupdate${post.id}">
+                    ${post.content}</p> <p id="post${post['id']}"><span style="color:gray">Likes: ${post.likecount}</span></p></div>`;
                 let likeForm = document.createElement('form');
                 let likeButton = document.createElement('button');
                 likeButton.classList.add('btn', 'btn-outline-info', 'btn-sm', 'mybutton');
@@ -110,7 +112,7 @@ function loadPosts(data) {
                 const csrftoken = getCookie('csrftoken');
 
                 likeForm.onsubmit = () => {
-                    fetch(`likePost/${post.id}`, {
+                    fetch(`/likePost/${post.id}/`, {
                             method: "POST",
                             headers: {
                                 'X-CSRFToken': csrftoken
@@ -201,7 +203,7 @@ function pagination(pageCount) {
     for (let i = 1; i <= pageCount && i <= 10; i++) {
         let myform = document.createElement('form');
         myform.onsubmit = () => {
-            fetch(`getAllPosts?page=${i}`)
+            fetch(`/getAllPosts?page=${i}/`)
                 .then(response => response.json())
                 .then(data => {
 
@@ -238,7 +240,7 @@ function pagination_buttons(pageCount, currentPage) {
             } else {
                 nextpage = 1;
             }
-            fetch(`getAllPosts?page=${nextpage}`)
+            fetch(`/getAllPosts?page=${nextpage}/`)
                 .then(response => response.json())
                 .then(data => {
 
@@ -280,7 +282,7 @@ function pagination_buttons(pageCount, currentPage) {
                 currentPage -= 1;
                 return false;
             }
-            fetch(`getAllPosts?page=${currentPage}`)
+            fetch(`/getAllPosts?page=${currentPage}/`)
                 .then(response => response.json())
                 .then(data => {
 
@@ -295,7 +297,7 @@ function pagination_buttons(pageCount, currentPage) {
                 currentPage += 1;
                 return false;
             }
-            fetch(`getAllPosts?page=${currentPage}`)
+            fetch(`/getAllPosts?page=${currentPage}/`)
                 .then(response => response.json())
                 .then(data => {
 
