@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block body %}
-    {% if user.is_authenticated %}
     <div style="text-align: center; margin-bottom: 20px;"> 
         <form action="{% url 'searchTags' %}" method="get" id="searchForm">
             <input type="text" name="tags" placeholder="Search for tags" style="border:1px solid blue; color:white">
             <input type="submit" value="Search" style="text-align: center;" class="btn btn-secondary btn-sm">
         </form>
     </div>
+    {% if user.is_authenticated %}
     <div id="TopRack">
         <button class="btn btn-primary btn-sm" id="newPostButton">New Post</button>
     </div>

@@ -81,9 +81,7 @@ function loadPosts(data) {
     fetch('/isloggedin/').
     then(response => response.json()).
     then(x => {
-        console.log(x.isloggedin);
-        if (x.isloggedin) {
-            data.allPosts.forEach(post => {
+        data.allPosts.forEach(post => {
                 let thispost = document.createElement('div');
                 thispost.classList.add('post');
                 thispost.innerHTML = `<div style="display: flex;"> <div class="picIconDiv"><img src=${post.userpic} class="picIcon"></div> 
@@ -91,106 +89,101 @@ function loadPosts(data) {
                     <a href="/user/${post.username}"><b>${post.username}</b></a> <i>${post.time}</i> </div> </div>
                      <div id="toHide${post.id}"> <p class="postContent" id="toupdate${post.id}">
                     ${post.content}</p> <p id="post${post['id']}"><span style="color:gray">Likes: ${post.likecount}</span></p></div>`;
-                let likeForm = document.createElement('form');
-                let likeButton = document.createElement('button');
-                likeButton.classList.add('btn', 'btn-outline-info', 'btn-sm', 'mybutton');
-                likeButton.type = 'submit';
-                likeButton.onclick = () => toggle(likeButton);
-                if (post['liked'] === false) {
-                    likeButton.innerHTML = 'Like';
-                } else {
-                    likeButton.innerHTML = 'Unlike';
-                }
-                likeForm.append(likeButton);
+                
+                if (x.isloggedin) {
 
-                let postid = document.createElement('input');
-                postid.type = 'hidden';
-                postid.name = 'id';
-                postid.value = post['id'];
-                likeForm.append(postid);
-
-                const csrftoken = getCookie('csrftoken');
-
-                likeForm.onsubmit = () => {
-                    fetch(`/likePost/${post.id}/`, {
-                            method: "POST",
-                            headers: {
-                                'X-CSRFToken': csrftoken
-                            }
-                        })
-                        .then(likereponse => likereponse.json())
-                        .then(likedata => {
-                            console.log(likedata);
-                            document.querySelector(`#post${post.id}`).innerHTML = `<span style="color:gray">Likes: ${likedata.newlikecount}</span>`;
-                        })
-                    return false;
+                    let likeForm = document.createElement('form');
+                    let likeButton = document.createElement('button');
+    
+                    likeButton.classList.add('btn', 'btn-outline-info', 'btn-sm', 'mybutton');
+                    likeButton.type = 'submit';
+                    likeButton.onclick = () => toggle(likeButton);
+                    if (post['liked'] === false) {
+                        likeButton.innerHTML = 'Like';
+                    } else {
+                        likeButton.innerHTML = 'Unlike';
+                    }
+                    likeForm.append(likeButton);
+    
+                    let postid = document.createElement('input');
+                    postid.type = 'hidden';
+                    postid.name = 'id';
+                    postid.value = post['id'];
+                    likeForm.append(postid);
+    
+                    const csrftoken = getCookie('csrftoken');
+    
+                    likeForm.onsubmit = () => {
+                        fetch(`/likePost/${post.id}/`, {
+                                method: "POST",
+                                headers: {
+                                    'X-CSRFToken': csrftoken
+                                }
+                            })
+                            .then(likereponse => likereponse.json())
+                            .then(likedata => {
+                                console.log(likedata);
+                                document.querySelector(`#post${post.id}`).innerHTML = `<span style="color:gray">Likes: ${likedata.newlikecount}</span>`;
+                            })
+                        return false;
+                    }
+    
+                    let edit = document.createElement('div');
+                    let editButton = document.createElement('button');
+                    let editSubmit = document.createElement('button');
+                    let editText = document.createElement('textarea');
+                    let editForm = document.createElement('form');
+    
+                    editText.style.display = "none";
+                    editText.style.color="white";
+                    editText.name = "post_content";
+                    editButton.innerHTML = "Edit";
+                    editButton.onclick = () => {
+                        editText.style.display = "block";
+                        editSubmit.style.display = "block";
+                        editButton.style.display = "none";
+                        editText.innerHTML = post.content;
+                        document.querySelector(`#toHide${post.id}`).style.display = "none";
+                        likeForm.style.display = "none";
+                    }
+    
+                    editButton.classList.add('btn', 'btn-outline-info', 'btn-sm');
+                    editSubmit.classList.add('btn', 'btn-primary', 'btn-sm');
+                    editSubmit.style.display = "none";
+                    editSubmit.innerHTML = "Done";
+                    editForm.onsubmit = () => {
+                        return false;
+                    }
+                    editSubmit.onclick = () => {
+                        fetch(`/editpost/${post.id}/`, {
+                                method: "POST",
+                                body: new FormData(editForm),
+                                headers: {
+                                    'X-CSRFToken': csrftoken
+                                }
+                            })
+                            .then(editresponse => editresponse.json())
+                            .then(editdata => {
+                                console.log(editdata);
+                                document.querySelector(`#toupdate${post.id}`).innerHTML = editdata.post_content;
+                                editText.style.display = "none";
+                                editSubmit.style.display = "none";
+                                editButton.style.display = "block";
+                                document.querySelector(`#toHide${post.id}`).style.display = "block";
+                                likeForm.style.display = "block";
+                            });
+                        return false;
+                    }
+                    editForm.append(editText, editSubmit);
+                    edit.append(editButton, editForm);
+                    thispost.append(likeForm);
+                    let user_id = document.querySelector("#userid").value;
+                    if (post.poster_id == user_id) {
+                        thispost.append(edit);
+                    }
+                    document.querySelector('#AllPosts').append(thispost);
                 }
-
-                let edit = document.createElement('div');
-                let editButton = document.createElement('button');
-                let editSubmit = document.createElement('button');
-                let editText = document.createElement('textarea');
-                let editForm = document.createElement('form');
-
-                editText.style.display = "none";
-                editText.style.color="white";
-                editText.name = "post_content";
-                editButton.innerHTML = "Edit";
-                editButton.onclick = () => {
-                    editText.style.display = "block";
-                    editSubmit.style.display = "block";
-                    editButton.style.display = "none";
-                    editText.innerHTML = post.content;
-                    document.querySelector(`#toHide${post.id}`).style.display = "none";
-                    likeForm.style.display = "none";
-                }
-
-                editButton.classList.add('btn', 'btn-outline-info', 'btn-sm');
-                editSubmit.classList.add('btn', 'btn-primary', 'btn-sm');
-                editSubmit.style.display = "none";
-                editSubmit.innerHTML = "Done";
-                editForm.onsubmit = () => {
-                    return false;
-                }
-                editSubmit.onclick = () => {
-                    fetch(`/editpost/${post.id}/`, {
-                            method: "POST",
-                            body: new FormData(editForm),
-                            headers: {
-                                'X-CSRFToken': csrftoken
-                            }
-                        })
-                        .then(editresponse => editresponse.json())
-                        .then(editdata => {
-                            console.log(editdata);
-                            document.querySelector(`#toupdate${post.id}`).innerHTML = editdata.post_content;
-                            editText.style.display = "none";
-                            editSubmit.style.display = "none";
-                            editButton.style.display = "block";
-                            document.querySelector(`#toHide${post.id}`).style.display = "block";
-                            likeForm.style.display = "block";
-                        });
-                    return false;
-                }
-                editForm.append(editText, editSubmit);
-                edit.append(editButton, editForm);
-                thispost.append(likeForm);
-                let user_id = document.querySelector("#userid").value;
-                if (post.poster_id == user_id) {
-                    thispost.append(edit);
-                }
-                document.querySelector('#AllPosts').append(thispost);
             });
-        } else {
-            data.allPosts.forEach(post => {
-                let thispost = document.createElement('div');
-                thispost.classList.add('post');
-                let userlink = document.createElement('a');
-                thispost.innerHTML = `<a href="/user/${post.username}"><b>${post.username}</b></a>
-                    <i>${post.time}</i> <p>${post.content}</p> Likes: ${post.likecount}`;
-                document.querySelector('#AllPosts').append(thispost);
-            });
-        }
         setTimeout(()=> {
             document.querySelector('#spinner').style.opacity = 0;
         }, 1500)
