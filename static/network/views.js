@@ -181,8 +181,8 @@ function loadPosts(data) {
                     if (post.poster_id == user_id) {
                         thispost.append(edit);
                     }
-                    document.querySelector('#AllPosts').append(thispost);
                 }
+                document.querySelector('#AllPosts').append(thispost);
             });
         setTimeout(()=> {
             document.querySelector('#spinner').style.opacity = 0;
@@ -217,6 +217,7 @@ function pagination(pageCount) {
 function pagination_buttons(pageCount, currentPage) {
     document.querySelector('#paginatory').innerHTML = '';
     let info = document.createElement('div');
+    console.log(currentPage)
     info.innerHTML = `Page: ${currentPage}`;
 
     let paginationdiv = document.querySelector('#paginatory');

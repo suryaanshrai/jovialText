@@ -40,6 +40,8 @@ def getAllPosts(request):
     page_no = request.GET.get("page")
     if page_no is None:
         page_no = 1
+    else:
+        page_no = page_no[:1]
     page_obj = list(paginator.get_page(page_no))
     for i in range(len(page_obj)):
         username = User.objects.get(id=page_obj[i]["poster_id"]).username
@@ -76,6 +78,8 @@ def getAllPostsSenti(request):
     page_no = request.GET.get("page")
     if page_no is None:
         page_no = 1
+    else:
+        page_no = page_no[:1]
     page_obj = list(paginator.get_page(page_no))
     for i in range(len(page_obj)):
         username = User.objects.get(id=page_obj[i]["poster_id"]).username
@@ -148,7 +152,10 @@ def userpage(request, username):
         follow_status = False
     paginator = Paginator(allposts, 10)
     page_no = request.GET.get("page")
-    if page_no is None or int(page_no) < 0 or int(page_no) > paginator.num_pages:
+    if page_no is not None:
+        page_no = page_no[:1]
+
+    if page_no is None or int(page_no[:1]) < 0 or int(page_no) > paginator.num_pages:
         page_no = 1
     page_obj = list(paginator.get_page(page_no))
     try:

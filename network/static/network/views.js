@@ -217,6 +217,7 @@ function pagination(pageCount) {
 function pagination_buttons(pageCount, currentPage) {
     document.querySelector('#paginatory').innerHTML = '';
     let info = document.createElement('div');
+    console.log(currentPage)
     info.innerHTML = `Page: ${currentPage}`;
 
     let paginationdiv = document.querySelector('#paginatory');
