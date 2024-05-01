@@ -25,7 +25,7 @@ function LikePost(id) {
 
     const csrftoken = getCookie('csrftoken');
 
-    fetch(`/likePost/${id}`, {
+    fetch(`/likePost/${id}/`, {
             method: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -52,7 +52,7 @@ function editpost(id) {
 }
 
 function editPostSubmit(id) {
-    fetch(`/editpost/${id}`, {
+    fetch(`/editpost/${id}/`, {
         method:"POST",
         body: new FormData(document.querySelector(`#editForm${id}`)),
     })

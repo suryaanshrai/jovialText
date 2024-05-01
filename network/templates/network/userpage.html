@@ -120,7 +120,7 @@
                 {% if user.is_authenticated %}
                 <form id="{{post.id}}form" onsubmit="LikePost({{post.id}}); return false">
 
-                    <button class="btn btn-primary btn-sm" id="button{{post.id}}" type="submit" style="margin-bottom: 5px;">
+                    <button class="btn btn-outline-info btn-sm" id="button{{post.id}}" type="submit" style="margin-bottom: 5px;">
                         {% if post.liked %}
                             Unlike
                         {% else %}
@@ -132,11 +132,11 @@
                 {% endif %}
                 </div>
                 {% if user.id == post.poster_id %}
-                    <button class="btn btn-primary btn-sm" id="editButton{{post.id}}" onclick="editpost({{post.id}})">Edit</button>
+                    <button class="btn btn-outline-info btn-sm" id="editButton{{post.id}}" onclick="editpost({{post.id}})">Edit</button>
                     <form id="editForm{{post.id}}" style="display:none">
-                        <textarea id="editText{{post.id}}" name="post_content">{{post.content}}</textarea>
+                        <textarea id="editText{{post.id}}" name="post_content" style="color:white">{{post.content}}</textarea>
                         {% csrf_token %}
-                        <input class="btn btn-primary btn-sm" onclick="editPostSubmit({{post.id}})" type="button" value="Done">
+                        <input class="btn btn-outline-info btn-sm" onclick="editPostSubmit({{post.id}})" type="button" value="Done">
                     </form>
                 {% endif %}
             </div>

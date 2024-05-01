@@ -94,12 +94,13 @@ def follow(request, tofollow):
         return HttpResponse("Cannot follow yourself")
     followObj = Follower.objects.filter(follower=User.objects.get(username=request.user.username),
                 following=User.objects.get(username=tofollow),)
-    if (followObj is None):
+    if (len(followObj) == 0):
         new_follow = Follower(follower=User.objects.get(username=request.user.username),
             following=User.objects.get(username=tofollow),)
         new_follow.save()
         return HttpResponseRedirect(reverse("userpage", args=(tofollow,)))
-    followObj.delete()
+    else:
+        followObj.delete()
     return HttpResponseRedirect(reverse("userpage", args=(tofollow,)))
 
 @login_required
