@@ -119,6 +119,11 @@ def searchTags(request):
             username = User.objects.get(id=thispost["poster_id"]).username
             thispost["username"] = username
             thispost["likecount"] = len(Like.objects.filter(post_id=thispost["id"]))
+            try:
+                pic_obj = UserPic.objects.get(user=User.objects.get(username=username))
+            except:
+                pic_obj = UserPic.objects.get(user=User.objects.get(username="master"))
+            thispost["userpic"] = pic_obj.pic.name[7:]
             if thispost not in allPosts:
                 allPosts.append(thispost)
     return JsonResponse({"allPosts":allPosts, })
