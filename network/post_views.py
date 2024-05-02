@@ -1,10 +1,21 @@
 from django.contrib.auth.decorators import login_required
-from .home_views import checkNegativeSentiment, err_message
-from .models import Posts, Tag, Like, User, UserPic
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
+from django.shortcuts import render
 from django.core.paginator import Paginator
+from .models import Posts, Tag, Like, User, UserPic
+from textblob import TextBlob
 
+
+def checkNegativeSentiment(text):
+    score = TextBlob(text).sentiment.polarity
+    if score <= -0.5:
+        return True
+    else:
+        return False
+    
+def err_message(request, error_message):
+    return render(request, "network/index.html", {"error_message":error_message})
 
 @login_required
 def createpost(request):
