@@ -1,0 +1,52 @@
+services:
+  api:
+    container_name: jovial-api
+    build: 
+      context: "./api"
+    volumes:
+      - ./api/app:/app
+    healthcheck:
+      test: "exit 0"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 8000:8000
+    networks:
+      - jovial-network
+
+  db:
+    container_name: jovial-db
+    image: postgres:latest
+    volumes:
+      - ./db/db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: jovial-db
+    networks:
+     - jovial-network
+    healthcheck:
+      test: "exit 0"
+
+  # ui:
+  #   container_name: jovial-ui
+  #   build:
+  #     context: "./ui"
+  #   volumes:
+  #     - ./ui:/app
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #    - jovial-network
+  #   healthcheck:
+  #     test: "exit 0"
+  #   depends_on:
+  #     api:
+  #       condition: service_healthy
+
+networks:
+  jovial-network:
+    name: jovial-network
