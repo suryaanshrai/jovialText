@@ -8,7 +8,7 @@ from jovialApi.serializers import UserSerializer, PostSerializer, FollowerSerial
 
 class IsOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        return obj.user == request.user
+        return obj.username == request.user
     
 
 class UserViewSet(
@@ -38,10 +38,10 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
-        return Post.objects.filter(user=self.request.user)
+        return Post.objects.filter(username=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(username=self.request.user)
 
 
 class LikeViewSet(viewsets.ModelViewSet):
@@ -53,10 +53,10 @@ class LikeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
-        return Like.objects.filter(user=self.request.user)
+        return Like.objects.filter(username=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(username=self.request.user)
 
 
 class FollowerViewSet(viewsets.ModelViewSet):
@@ -68,7 +68,7 @@ class FollowerViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
-        return Follower.objects.filter(user=self.request.user)
+        return Follower.objects.filter(username=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(username=self.request.user)

@@ -21,7 +21,7 @@ class MyUser(User):
     pic = models.URLField(blank=True,validators=[validate_image_url])
 
 class Post(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     content = models.TextField(max_length=256)
     time = models.DateTimeField(auto_now_add=True)
     # tag = models.CharField(max_length=50, blank=True)
@@ -31,7 +31,7 @@ class Post(models.Model):
 
 
 class Like(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     time = models.TimeField(auto_now_add=True)
 
@@ -40,11 +40,11 @@ class Like(models.Model):
 
 
 class Follower(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="following"
+    username = models.ForeignKey(
+        MyUser, on_delete=models.CASCADE, related_name="following"
     )
     following = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="followers"
+        MyUser, on_delete=models.CASCADE, related_name="followers"
     )
 
     def __str__(self):
