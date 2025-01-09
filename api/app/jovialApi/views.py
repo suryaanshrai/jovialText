@@ -1,22 +1,74 @@
-from django.contrib.auth.models import Group, User
-from rest_framework import permissions, viewsets
+from django.contrib.auth.models import Group
+from rest_framework import permissions, viewsets, mixins
 
-from jovialApi.serializers import GroupSerializer, UserSerializer
+from .models import MyUser, Follower, Like, Post
+
+from jovialApi.serializers import UserSerializer, PostSerializer, FollowerSerializer, LikeSerializer
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class IsOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.user == request.user
+    
+
+class UserViewSet(
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet
+):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = User.objects.all().order_by('-date_joined')
+    queryset = MyUser.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    def get_permissions(self):
+        if self.action in ['create']:
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated(), IsOwner()]
 
 
-class GroupViewSet(viewsets.ModelViewSet):
+class PostViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows posts to be viewed or edited.
     """
-    queryset = Group.objects.all().order_by('name')
-    serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    queryset = Post.objects.all().order_by('time')
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        return Post.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class LikeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows likes to be viewed or edited.
+    """
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        return Like.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class FollowerViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows followers to be viewed or edited.
+    """
+    queryset = Follower.objects.all()
+    serializer_class = FollowerSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        return Follower.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
