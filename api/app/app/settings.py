@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'jovialApi',
     'rest_framework',
     'rest_framework_swagger', 
-    'drf_yasg',  
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -130,8 +130,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_URL = '/api-auth/login'
 
-SWAGGER_SETTINGS = {
-    "LOGOUT_URL": "/api-auth/logout/",
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'JovialText API',
+    'DESCRIPTION': 'API for the Jovial Text Platform',
+    'VERSION': '2.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = './media'
