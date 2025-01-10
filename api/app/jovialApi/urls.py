@@ -1,4 +1,6 @@
 from django.urls import include, path
+from django.contrib import admin
+
 from rest_framework import routers
 
 from jovialApi import views
@@ -9,12 +11,13 @@ router.register(r'like', views.LikeViewSet)
 router.register(r'post', views.PostViewSet)
 router.register(r'follow', views.FollowerViewSet)
 
-# Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
+admin.site.site_header = "The Jovial Admin Page"
+
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', include(router.urls), name="api-root"),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/register/', include('dj_rest_auth.registration.urls')),
+
 
 ]

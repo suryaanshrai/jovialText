@@ -17,7 +17,7 @@ def validate_image_url(value):
     #     raise ValidationError('The URL must end with a valid image file extension.')
 
 class User(AbstractUser):
-    bio = models.TextField(max_length=256, blank=True)
+    bio = models.TextField(max_length=128, blank=True)
     pic = models.URLField(blank=True,validators=[validate_image_url])
 
 class Post(models.Model):
@@ -27,7 +27,7 @@ class Post(models.Model):
     # tag = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
-        return f'{self.id}'
+        return f'{self.content}'
 
 
 class Like(models.Model):
@@ -35,8 +35,11 @@ class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     time = models.TimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('username', 'post')
+
     def __str__(self):
-        return f"{self.id}"
+        return f"{self.username} likes {self.post}"
 
 
 class Follower(models.Model):
@@ -47,5 +50,8 @@ class Follower(models.Model):
         User, on_delete=models.CASCADE, related_name="followers"
     )
 
+    class Meta:
+        unique_together = ('username', 'follow')
+
     def __str__(self):
-        return f"{self.id}"
+        return f"{self.username} follows {self.follow}"

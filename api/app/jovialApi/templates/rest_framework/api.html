@@ -1,0 +1,35 @@
+{% extends "rest_framework/base.html" %}
+{% load static %}
+{% load i18n %}
+{% load rest_framework %}
+
+
+
+{% block title %}The Jovial API ; ){% endblock %}
+
+
+
+{% block branding %}
+    <a class='navbar-brand' rel="nofollow" href='{% url "api-root" %}'>
+        browsable_api
+    </a>
+    <a class='navbar-brand' rel="nofollow" href='{% url "redoc" %}'>
+        redoc
+    </a>
+    <a class='navbar-brand' rel="nofollow" href='{% url "swagger-ui" %}'>
+        swagger
+    </a>
+{% endblock %}
+
+
+
+{% block userlinks %}
+  {% if user.is_authenticated %}
+    {% optional_logout request user csrf_token %}
+  {% else %}
+  <li>
+      <a href="{% url 'account_login' %}">AllAuth</a>
+  </li>
+    {% optional_login request %}
+  {% endif %}
+{% endblock %}
