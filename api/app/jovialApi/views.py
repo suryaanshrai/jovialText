@@ -93,19 +93,20 @@ class UserViewSet(viewsets.ModelViewSet):
         raise PermissionDenied("You do not have permission to create a new user.")
 
     def update(self, request, *args, **kwargs):
-        if request.user.id != int(kwargs['pk']):
+        if str(request.user.id) != kwargs['pk']:
             raise PermissionDenied("You do not have permission to edit this user.")
         self.permission_classes = [IsAuthenticated]
         return super().update(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
-        if request.user.id != int(kwargs['pk']):
+        if str(request.user.id) != kwargs['pk']:
             raise PermissionDenied("You do not have permission to edit this user.")
         self.permission_classes = [IsAuthenticated]
         return super().partial_update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
-        if request.user.id != int(kwargs['pk']):
+        if str(request.user.id) != kwargs['pk']:
+            print(type(request.user.id) , type(kwargs['pk']))
             raise PermissionDenied("You do not have permission to delete this user.")
         self.permission_classes = [IsAuthenticated]
         return super().destroy(request, *args, **kwargs)

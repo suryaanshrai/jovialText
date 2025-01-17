@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 import requests
+import uuid
 
 def validate_image_url(value):
     try:
@@ -17,10 +18,12 @@ def validate_image_url(value):
     #     raise ValidationError('The URL must end with a valid image file extension.')
 
 class User(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bio = models.TextField(max_length=128, blank=True)
-    pic = models.URLField(blank=True,validators=[validate_image_url])
+    pic = models.URLField(blank=True, validators=[validate_image_url])
 
 class Post(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(max_length=256)
     time = models.DateTimeField(auto_now_add=True)
