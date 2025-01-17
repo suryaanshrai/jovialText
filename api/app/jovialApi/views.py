@@ -20,7 +20,6 @@ class LikeViewSet(viewsets.ModelViewSet):
         return Like.objects.filter(username=self.request.user)
 
     def perform_create(self, serializer):
-        print(serializer)
         serializer.save(username=self.request.user)
 
 

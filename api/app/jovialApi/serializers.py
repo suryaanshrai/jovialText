@@ -18,12 +18,13 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Post
-        fields = ['url','id','username', 'content']
+        fields = ['url','id','username', 'content', 'pic']
 
 
 class LikeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Like
+        # Remove id as an feild in production
         fields = ['url','id','post']
 
 
