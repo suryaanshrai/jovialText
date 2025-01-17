@@ -1,38 +1,98 @@
-import { Avatar } from '@radix-ui/react-avatar'
+import { toast } from 'sonner'
+import JovialUserCard from './JovialUserCard'
 import { Button } from './ui/button'
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from './ui/card'
+import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from './ui/card'
 import { Pen, ThumbsUp, Trash } from 'lucide-react'
-import { AvatarFallback, AvatarImage } from './ui/avatar'
-function JovialPost() {
-  return (
-    <Card className="max-w-screen-md mx-auto my-10">
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
+interface JovialPostProps {
+  title?: string;
+  content?: string;
+  username?: string;
+  postedAt?: string;
+  image?: string;
+  isOwner?: boolean;
+  isLiked?: boolean;
+}
+
+function JovialPost({
+  title = "Card title",
+  content = "Card content",
+  username = "username",
+  postedAt = "date",
+  image = "image",
+  isOwner = false,
+  isLiked = false,
+}: JovialPostProps) {
+
+  const deleteButton = (<AlertDialog>
+    <AlertDialogTrigger>
+      <Button className='mx-1' variant="destructive"> <Trash /> Delete</Button>
+    </AlertDialogTrigger>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+        <AlertDialogDescription>
+          This action cannot be undone. This will permanently delete your post and remove it from our servers.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction>
+        Yes, Delete it!
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>)
+
+  const buttons = (
+    <>
+      {isLiked ? 
+      (<Button className='mx-1' onClick={() => toast("Post Unliked!")}> <ThumbsUp /> Unlike</Button>)
+      :
+      (<Button className='mx-1' onClick={() => toast("Post Liked!")}> <ThumbsUp /> Like</Button>)
+      }
+      {isOwner ? deleteButton : null}
+      {isOwner ?(<Button className='mx-1' variant="secondary"> <Pen /> Edit</Button>):null}
+    </>
+  )
+
+  return (<>
+   
+    <Card className='mr-7 my-5 max-h-min w-full lg:w-2/3 md:w-2/3'>
       <CardHeader>
-        <CardTitle>
-          <div>
-            
-            <div className='text-lg'>A beautiful sunset</div>
-          </div>
-        </CardTitle>
+        <JovialUserCard username={username} />
+        <CardTitle className='text-lg
+        '>{title}</CardTitle>
+        <CardDescription>
+        </CardDescription>
       </CardHeader>
-      <div className='overflow-hidden rounded-lg'>
-        <img className='object-cover w-full h-full p-10 rounded-md' src="https://images.pexels.com/photos/36744/agriculture-arable-clouds-countryside.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
-      </div>
       <CardContent>
-        <p>The sun is setting, casting a warm glow over the world. It's a beautiful reminder that even the darkest days must eventually give way to light.
-
-        I love this time of day. The world seems to slow down, and everything feels calmer. It's a time for reflection and gratitude.
-
-        I'm grateful for the people in my life who make me happy. I'm grateful for the opportunities I have to make a difference in the world. And I'm grateful for the simple things in life, like a beautiful sunset.
-
-        I hope you have a chance to enjoy a beautiful sunset today. Take a moment to appreciate the beauty of the world around you. And remember, even when things are tough, there is always hope for a brighter tomorrow.</p>
+        <div className='text-center'>
+        <div className='inline-block overflow-hidden rounded-lg h-1/3'>
+        {image}
+        </div>
+        </div>
+        <p>{content}</p>
       </CardContent>
       <CardFooter>
-        <Button className='mx-1'> <ThumbsUp /> Like</Button>
-        <Button className='mx-1' variant="secondary"> <Pen /> Edit</Button>
-        <Button className='mx-1' variant="destructive"> <Trash /> Delete</Button>
+        {buttons}
       </CardFooter>
     </Card>
+
+    </>
   )
 }
 
 export default JovialPost
+

@@ -30,6 +30,7 @@ function App() {
 
   return (
     <>
+    
       <PostDrawerProvider value={{postDrawer, openPostDrawer, closePostDrawer}}>
       <SearchDialogProvider value={{searchDialog, openSearchDialog, closeSearchDialog}} >
 
@@ -39,7 +40,8 @@ function App() {
       <DrawerDemo />
       <SidebarProvider>
         <JovialSidebar />
-        <SidebarTrigger />
+
+        <SidebarTrigger  />
         <JovialSearchBox />
         <Outlet />
 

@@ -1,4 +1,5 @@
 import { X } from "lucide-react"
+import { Editor } from '@tinymce/tinymce-react';
 import { Button } from "@/components/ui/button"
 import {
   Drawer,
@@ -64,13 +65,14 @@ export function DrawerDemo() {
               <span className="sr-only">Close</span>
             </Button>
           </DrawerHeader>
-          <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Title" />
+            <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Title" />
 
-          <Textarea className="h-40" placeholder={joke || 'Loading joke...'}/>
-           <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Image URL" />
-           <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Tags" />
+            {/* <Textarea className="h-40" placeholder={joke || 'Loading joke...'}/> */}
+            <Editor />
+            <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Image URL" />
+            <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Tags" />
           <DrawerFooter>
-            <Button className="mb-32 mt-10" onClick={submitFormPost}>Post</Button>
+            <Button className="" onClick={submitFormPost}>Post</Button>
           </DrawerFooter>
         </div>
       </DrawerContent>
