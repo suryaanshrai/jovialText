@@ -2,16 +2,25 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import jovialLogo from '../assets/logo.png'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu'
 import { Search, ChevronUp, Pen, Heart, Globe, Home, Star } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import usePostDrawer from '@/contexts/postDrawer'
-import useSearchDialog from '@/contexts/searchDialog'
+// import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import JovialUserCard from './JovialUserCard'
+import { useEffect, useState } from 'react'
+import useComponentContext from '@/contexts/componentContext'
 
 function JovialSidebar() {
 
-  const {openPostDrawer} = usePostDrawer();
+  const {openPostDrawer} = useComponentContext();
 
-  const {openSearchDialog} = useSearchDialog();
+  const {openSearchDialog} = useComponentContext();
   
+  const [dateTime, setDateTime] = useState("")
+
+  useEffect(()=> {
+    setInterval(()=> {
+      setDateTime(new Date().toLocaleString());
+    }, 1000);
+  }, [])
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -33,11 +42,12 @@ function JovialSidebar() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton size='lg'>
-                  <Avatar>
-                    <AvatarImage src="https://avatars.githubusercontent.com/u/102371942?v=4" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                     ggvamp0001
+                  <JovialUserCard 
+                    userUrl='http://0.0.0.0:8000/user/7fcbf41a-8529-44d6-9dec-c5d6e14878ca/' 
+                    enableLink={false} 
+                    className='text-lg'
+                    date={dateTime}
+                  />
                     <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>

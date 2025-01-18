@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1"]
 
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 
 # Application definition
 
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
+    "corsheaders",
     'rest_framework_swagger', 
     'drf_spectacular',
 ]
@@ -55,7 +57,9 @@ ALLAUTH_UI_THEME = "light"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -99,10 +103,17 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         'NAME': 'jovial-db',
         'USER': 'root',
-        'HOST': 'localhost',
+        'HOST': 'jovial-db',
         'PORT': 5432,
         'PASSWORD':'root'
     }
+}
+
+STORAGES = {
+    # ...
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
 }
 
 
@@ -193,5 +204,5 @@ SOCIALACCOUNT_PROVIDERS = {
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-STATIC_URL='static/'
-STATIC_ROOT = BASE_DIR / 'static'
+# STATIC_URL='static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"

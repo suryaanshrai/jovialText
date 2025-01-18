@@ -2,10 +2,10 @@ import { Dialog,  DialogContent, DialogDescription, DialogHeader, DialogTitle } 
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { X } from 'lucide-react'
-import useSearchDialog from '@/contexts/searchDialog'
+import useComponentContext from '@/contexts/componentContext'
 
 function JovialSearchBox() {
-  const { searchDialog, closeSearchDialog } = useSearchDialog();
+  const { searchDialog, closeSearchDialog } = useComponentContext();
   window.addEventListener('keydown', (e)=>{
     if (e.key === 'Escape') {
       closeSearchDialog();

@@ -1,5 +1,5 @@
 import { X } from "lucide-react"
-import { Editor } from '@tinymce/tinymce-react';
+// import { Editor } from '@tinymce/tinymce-react';
 import { Button } from "@/components/ui/button"
 import {
   Drawer,
@@ -8,16 +8,15 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer"
-import usePostDrawer from "@/contexts/postDrawer"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
+import useComponentContext from "@/contexts/componentContext"
 
 
-export function DrawerDemo() { 
+export function JovialPostForm() { 
   
-  const hasFetchedJoke = useRef(false);
   const [joke, setJoke] = useState("");
   const fetchJoke = () => {
     fetch('https://v2.jokeapi.dev/joke/Any?safe-mode&type=single')
@@ -26,6 +25,8 @@ export function DrawerDemo() {
       setJoke(data.joke)
     })
   }
+  
+  const hasFetchedJoke = useRef(false);
   useEffect(() => {
     if (!hasFetchedJoke.current) {
       fetchJoke();
@@ -35,7 +36,7 @@ export function DrawerDemo() {
 
 
 
-  const {postDrawer, closePostDrawer} = usePostDrawer()
+  const {postDrawer, closePostDrawer} = useComponentContext()
   window.addEventListener('keydown', (e)=>{
     if (e.key === 'Escape') {
       closePostDrawer();
@@ -67,12 +68,12 @@ export function DrawerDemo() {
           </DrawerHeader>
             <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Title" />
 
-            {/* <Textarea className="h-40" placeholder={joke || 'Loading joke...'}/> */}
-            <Editor />
+            <Textarea className="h-40" placeholder={joke || 'Loading joke...'}/>
+            {/* <Editor /> */}
             <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Image URL" />
-            <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Tags" />
+            {/* <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Tags" /> */}
           <DrawerFooter>
-            <Button className="" onClick={submitFormPost}>Post</Button>
+            <Button className="mb-10" onClick={submitFormPost}>Post</Button>
           </DrawerFooter>
         </div>
       </DrawerContent>

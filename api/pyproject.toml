@@ -19,6 +19,8 @@ drf-spectacular = "^0.28.0"
 dj-rest-auth = "^7.0.1"
 django-allauth = {extras = ["socialaccount"], version = "^65.3.1"}
 djangorestframework-simplejwt = "^5.4.0"
+django-cors-headers = "^4.6.0"
+whitenoise = "^6.8.2"
 
 
 [build-system]

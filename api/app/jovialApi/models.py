@@ -25,7 +25,8 @@ class User(AbstractUser):
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField(max_length=256)
+    title = models.CharField(max_length=128)
+    content = models.TextField(max_length=2048)
     pic = models.URLField(blank=True, validators=[validate_image_url])
     time = models.DateTimeField(auto_now_add=True)
     # tag = models.CharField(max_length=50, blank=True)

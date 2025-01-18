@@ -15,10 +15,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-interface JovialPostProps {
+export interface JovialPostProps {
   title?: string;
   content?: string;
-  username?: string;
+  userurl?: string;
   postedAt?: string;
   image?: string;
   isOwner?: boolean;
@@ -26,11 +26,11 @@ interface JovialPostProps {
 }
 
 function JovialPost({
-  title = "Card title",
-  content = "Card content",
-  username = "username",
-  postedAt = "date",
-  image = "image",
+  title = "Card",
+  content = "",
+  userurl = "#",
+  postedAt = "",
+  image = "",
   isOwner = false,
   isLiked = false,
 }: JovialPostProps) {
@@ -63,15 +63,26 @@ function JovialPost({
       (<Button className='mx-1' onClick={() => toast("Post Liked!")}> <ThumbsUp /> Like</Button>)
       }
       {isOwner ? deleteButton : null}
-      {isOwner ?(<Button className='mx-1' variant="secondary"> <Pen /> Edit</Button>):null}
+      {/* {isOwner ?(<Button className='mx-1' variant="secondary"> <Pen /> Edit</Button>):null} */}
     </>
   )
 
+  const formatDate = (isoDateString) => {
+    const date = new Date(isoDateString);
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true, // Toggle for 12-hour format
+    });
+  };
   return (<>
    
-    <Card className='mr-7 my-5 max-h-min w-full lg:w-2/3 md:w-2/3'>
+    <Card className='mr-7 my-5 max-h-min w-full lg:w-2/3 md:w-2/3 lg:mx-auto md:mx-auto'>
       <CardHeader>
-        <JovialUserCard username={username} />
+        <JovialUserCard date={formatDate(postedAt)} userUrl={userurl}/>
         <CardTitle className='text-lg
         '>{title}</CardTitle>
         <CardDescription>
@@ -80,7 +91,7 @@ function JovialPost({
       <CardContent>
         <div className='text-center'>
         <div className='inline-block overflow-hidden rounded-lg h-1/3'>
-        {image}
+        <img className='max-h-screen' src={image}></img>
         </div>
         </div>
         <p>{content}</p>
