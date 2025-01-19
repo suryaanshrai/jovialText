@@ -31,21 +31,22 @@ services:
     healthcheck:
       test: "exit 0"
 
-  # ui:
-  #   container_name: jovial-ui
-  #   build:
-  #     context: "./ui"
-  #   volumes:
-  #     - ./ui:/app
-  #   ports:
-  #     - 3000:3000
-  #   networks:
-  #    - jovial-network
-  #   healthcheck:
-  #     test: "exit 0"
-  #   depends_on:
-  #     api:
-  #       condition: service_healthy
+  ui:
+    container_name: jovial-ui
+    build:
+      context: "./ui/app"
+    volumes:
+      - ./ui/app:/app
+      - /app/node_modules
+    ports:
+      - 5173:5173
+    networks:
+     - jovial-network
+    healthcheck:
+      test: "exit 0"
+    depends_on:
+      api:
+        condition: service_healthy
 
 networks:
   jovial-network:
