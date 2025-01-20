@@ -13,6 +13,9 @@ import { Input } from "@/components/ui/input"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import useComponentContext from "@/contexts/componentContext"
+import conf from "@/conf/conf"
+import useAuthContext from "@/contexts/authContext"
+import requestHandler from "@/handler/responseHandler"
 
 
 export function JovialPostForm() { 
@@ -43,9 +46,35 @@ export function JovialPostForm() {
     }
   })
 
-  const submitFormPost = () => {
-    toast("Post published Successfully. Thanks for sharing!");
-    closePostDrawer();
+  const [content, setcontent] = useState("")
+  const [title, settitle] = useState("")
+  const [pic, setpic] = useState("")
+
+  const {user, token} = useAuthContext();
+
+  const submitFormPost = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    toast('Posting...')
+    fetch(`${conf.api_url}post/`, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body : JSON.stringify({
+        username: `${user}/`,
+        content: content,
+        title: title,
+        pic: pic,
+      })
+    })
+    .then(request => requestHandler(request))
+    .then(data => {
+      if (data.invalid) return;
+      toast("Post published Successfully. Thanks for sharing!");
+      closePostDrawer();
+    })
   }
 
   return (
@@ -66,15 +95,18 @@ export function JovialPostForm() {
               <span className="sr-only">Close</span>
             </Button>
           </DrawerHeader>
-            <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Title" />
+          <form onSubmit={submitFormPost}>
 
-            <Textarea className="h-40" placeholder={joke || 'Loading joke...'}/>
+            <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Title" onChange={(e) => {settitle(e.target.value)}} />
+
+            <Textarea className="h-40" placeholder={joke || 'Loading joke...'} onChange={(e) => {setcontent(e.target.value)}}/>
             {/* <Editor /> */}
-            <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Image URL" />
+            <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Image URL" onChange={(e) => {setpic(e.target.value)}} />
             {/* <Input className="flex w-full max-w-sm items-center space-x-2 my-5" placeholder="Tags" /> */}
           <DrawerFooter>
-            <Button className="mb-10" onClick={submitFormPost}>Post</Button>
+            <Button className="mb-10">Post</Button>
           </DrawerFooter>
+          </form>
         </div>
       </DrawerContent>
     </Drawer>

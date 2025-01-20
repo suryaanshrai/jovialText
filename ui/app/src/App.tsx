@@ -16,6 +16,8 @@ import JovialRegister from './components/JovialRegister'
 import JovialEditUser from './components/JovialEditUser'
 import { AuthProvider } from './contexts/authContext'
 import { toast } from 'sonner'
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+
 import responseHandler from './handler/responseHandler'
 
 function App() {
@@ -134,12 +136,14 @@ function App() {
 
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || '')
-    const token = JSON.parse(localStorage.getItem("token") || '')
-    if (user && token) {
-      setUser(user)
-      setToken(token)
-      setSignedIn(true)
+    const userItem = localStorage.getItem("user");
+    const tokenItem = localStorage.getItem("token");
+    if (userItem && tokenItem) {
+      const user = JSON.parse(userItem);
+      const token = JSON.parse(tokenItem);
+      setUser(user);
+      setToken(token);
+      setSignedIn(true);
     }
   }, [])
 
@@ -151,6 +155,15 @@ function App() {
 
   return (
     <>
+    <div className='text-center'>
+    <Alert>
+      <AlertTitle className='underline'>Note</AlertTitle>
+      <AlertDescription>
+        This app is under development
+      </AlertDescription>
+    </Alert>
+    </div>
+
       <AuthProvider value={{user, token, signedIn, login, logout, register}}>
       <ComponentProvider value={{
         postDrawer, openPostDrawer, closePostDrawer,
