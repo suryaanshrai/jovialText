@@ -48,6 +48,16 @@ services:
       api:
         condition: service_healthy
 
+  ready:
+    image: busybox
+    container_name: jovial-ready
+    command: wget -qO - https://raw.githubusercontent.com/suryaanshrai/jovialText/refs/heads/v2/jovial-text-is-up.txt | cat
+    depends_on:
+      ui:
+        condition: service_healthy
+    networks:
+     - jovial-network
+
 networks:
   jovial-network:
     name: jovial-network
