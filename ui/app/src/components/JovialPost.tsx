@@ -14,6 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import useAuthContext from '@/contexts/authContext'
 
 export interface JovialPostProps {
   title?: string;
@@ -55,8 +56,11 @@ function JovialPost({
     </AlertDialogContent>
   </AlertDialog>)
 
+  const {signedIn} = useAuthContext()
+
   const buttons = (
     <>
+    {signedIn?<>
       {isLiked ? 
       (<Button className='mx-1' onClick={() => toast("Post Unliked!")}> <ThumbsUp /> Unlike</Button>)
       :
@@ -64,6 +68,10 @@ function JovialPost({
       }
       {isOwner ? deleteButton : null}
       {/* {isOwner ?(<Button className='mx-1' variant="secondary"> <Pen /> Edit</Button>):null} */}
+      </>
+      :
+      <></>
+    }
     </>
   )
 

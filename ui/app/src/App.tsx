@@ -14,6 +14,7 @@ import { ComponentProvider } from './contexts/componentContext'
 import JovialSignIn from './components/JovialSignIn'
 import JovialRegister from './components/JovialRegister'
 import JovialEditUser from './components/JovialEditUser'
+import { AuthProvider } from './contexts/authContext'
 
 function App() {
   const [postDrawer, setOpen] = React.useState(false);const openPostDrawer = () => setOpen(true);const closePostDrawer = () => setOpen(false)
@@ -22,7 +23,22 @@ function App() {
   const [registerDialog, setRegisterDialog] = React.useState(false);const openRegisterDialog = () => setRegisterDialog(true);const closeRegisterDialog = () => setRegisterDialog(false)
   const [editUserDialog, setEditUserDialog] = React.useState(false);const openEditUserDialog = () => setEditUserDialog(true);const closeEditUserDialog = () => setEditUserDialog(false)
 
-  
+  const [user, setUser] = React.useState("")
+  const [token, setToken] = React.useState("")
+  const [signedIn, setSignedIn] = React.useState(false)
+
+  const login = () => {
+    // TODO
+  }
+
+  const logout = () => {
+    // TODO
+  }
+
+  const register = () => {
+    // TODO
+  }
+
   const [post, setPost] = useState<JovialPostProps[]>([])
   const fetchPosts = () => {
     fetch(`${conf.api_url}post/`).then(response => response.json()).then(data => {
@@ -40,6 +56,7 @@ function App() {
 
   return (
     <>
+      <AuthProvider value={{user, token, signedIn, login, logout, register}}>
       <ComponentProvider value={{
         postDrawer, openPostDrawer, closePostDrawer,
         searchDialog, openSearchDialog, closeSearchDialog,
@@ -78,6 +95,7 @@ function App() {
         <Toaster />
       </SidebarProvider>
       </ComponentProvider>
+      </AuthProvider>
     </>
   )
 }

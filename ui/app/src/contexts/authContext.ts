@@ -3,8 +3,10 @@ import { createContext, useContext } from "react";
 export const AuthContext = createContext({
     user: "",
     token: "",
+    signedIn: false,
     login: () => {},
-    logout:() => {}
+    logout:() => {},
+    register: () => {},
 });
 
 export const AuthProvider = AuthContext.Provider;
