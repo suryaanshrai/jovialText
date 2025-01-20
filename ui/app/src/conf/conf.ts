@@ -1,5 +1,5 @@
 const conf = {
-    api_url: "http://0.0.0.0:8000/"
+    api_url: "http://localhost:8000/"
 }
 
 export default conf;

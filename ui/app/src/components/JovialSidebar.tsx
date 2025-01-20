@@ -12,7 +12,7 @@ function JovialSidebar() {
 
   const {openPostDrawer, openSearchDialog, openLoginDialog, openRegisterDialog, openEditUserDialog} = useComponentContext();
 
-  const {signedIn, user} = useAuthContext();
+  const {signedIn, user, logout} = useAuthContext();
 
   const [dateTime, setDateTime] = useState("");
 
@@ -75,7 +75,7 @@ function JovialSidebar() {
                     <DropdownMenuItem onClick={openEditUserDialog} >
                       <span> Edit Account</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={logout}>
                       <span> Log out</span>
                     </DropdownMenuItem>
                 </DropdownMenuContent>

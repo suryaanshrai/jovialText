@@ -9,9 +9,23 @@ import { X } from "lucide-react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import useComponentContext from "@/contexts/componentContext"
+import useAuthContext from "@/contexts/authContext"
+import { useEffect, useRef, useState } from "react"
   
 function JovialSignIn() {
   const {loginDialog, closeLoginDialog} = useComponentContext();
+  const {login} = useAuthContext();
+
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+
+  const handleLogin = (e) => {
+    e.preventDefault()
+    login(username, password);
+    closeLoginDialog();
+  }
+
+
   return (
     <Dialog open={loginDialog}>
     {/* <Dialog open={true}> */}
@@ -34,9 +48,11 @@ function JovialSignIn() {
           </Button>
       </div>
         <div className="text-center"><img className="inline-block rounded-lg max-w-full" src="https://picsum.photos/400"/></div>
-        <Input placeholder="username" required/>
-        <Input placeholder="password" type="password" required/>
+        <form onSubmit={handleLogin}>
+        <Input className="my-2" placeholder="username" onChange={(e)=>setUsername(e.target.value)} required/>
+        <Input className="mb-2" placeholder="password" onChange={(e)=>setPassword(e.target.value)} type="password" required/>
         <Button type="submit">Sign in</Button>
+        </form>
     </DialogContent>
   </Dialog>
   )

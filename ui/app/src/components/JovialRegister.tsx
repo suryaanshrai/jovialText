@@ -9,9 +9,24 @@ import { X } from "lucide-react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import useComponentContext from "@/contexts/componentContext"
+import { useState } from "react"
+import useAuthContext from "@/contexts/authContext"
   
 function JovialRegister() {
   const {registerDialog, closeRegisterDialog} = useComponentContext();
+
+  const [username, setUsername] = useState("")
+  const [password, setpassword] = useState("")
+  const [repassword, setrepassword] = useState("")
+  const [email, setemail] = useState("")
+  
+  const {register} = useAuthContext();
+  const handleRegister = (e) => {
+    e.preventDefault();
+    register(username, email, password, repassword);
+    closeRegisterDialog();
+  }
+
   return (
     <Dialog open={registerDialog}>
     <DialogContent>
@@ -34,13 +49,15 @@ function JovialRegister() {
       </div>
         <div className="text-center"><img className="inline-block rounded-lg max-w-full" src="https://random.imagecdn.app/400/400"/></div>
         please register here:
-        <Input placeholder="username" required/>
-        <Input placeholder="email" type="email" required />
-        <Input placeholder="password" type="password" required/>
-        <Input placeholder="password-again" type="password" required/>
+        <form onSubmit={handleRegister}>
+          <Input className="mt-2" onChange={(e) => {setUsername(e.target.value)}} placeholder="username" required/>
+          <Input className="mt-2" onChange={(e) => {setemail(e.target.value)}} placeholder="email" type="email" required />
+          <Input className="mt-2" onChange={(e) => {setpassword(e.target.value)}} placeholder="password" type="password" required/>
+          <Input className="mt-2" onChange={(e) => {setrepassword(e.target.value)}} placeholder="password-again" type="password" required/>
+          <Button className="mt-2" type="submit">Register</Button>
+        </form>
         {/* <Input placeholder="profile pic (url)" /> */}
         
-        <Button type="submit">Register</Button>
     </DialogContent>
   </Dialog>
   )

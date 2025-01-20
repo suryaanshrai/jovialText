@@ -15,6 +15,7 @@ import JovialSignIn from './components/JovialSignIn'
 import JovialRegister from './components/JovialRegister'
 import JovialEditUser from './components/JovialEditUser'
 import { AuthProvider } from './contexts/authContext'
+import { toast } from 'sonner'
 
 function App() {
   const [postDrawer, setOpen] = React.useState(false);const openPostDrawer = () => setOpen(true);const closePostDrawer = () => setOpen(false)
@@ -27,16 +28,112 @@ function App() {
   const [token, setToken] = React.useState("")
   const [signedIn, setSignedIn] = React.useState(false)
 
-  const login = () => {
-    // TODO
+  const login = (username, password) => {
+    toast('Logging you in')
+    fetch(`${conf.api_url}csrf`)
+    .then(response => response.json())
+    .then(data => {
+      const csrf_token = data.csrfToken;
+
+      fetch(`${conf.api_url}auth/login/`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'X-CSRFTOKEN': csrf_token
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(errorData => {
+            console.log('Error Response:', errorData);
+            const errors = Object.entries(errorData).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`).join('\n');
+            toast(`Error:\n${errors}`);
+            return {invalid:true};
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.invalid) return;
+        setUser(`${conf.api_url}user/${data.user.pk}`)
+        setSignedIn(true);
+        setToken(data.access)
+        toast('Successfully Logged In')
+      })
+
+    })
   }
 
   const logout = () => {
-    // TODO
+    toast('Logging out...');
+    fetch(`${conf.api_url}auth/logout/`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+    })
+    .then(response => {
+      if (!response.ok) {
+        toast(`Error! ${response.statusText}`);
+        return {invalid:true}
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.invalid) return;
+      setUser("")
+      setSignedIn(false);
+      setToken("")
+      toast('Successfully Logged Out')
+    })
   }
 
-  const register = () => {
-    // TODO
+  const register = (username, email, password, repassword) => {
+    toast('Registering you')
+    fetch(`${conf.api_url}csrf`).then(response => response.json()).then(data => {
+      const csrf_token = data.csrfToken;
+
+      fetch(`${conf.api_url}auth/register/`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'X-CSRFTOKEN': csrf_token
+        },
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          password1: password,
+          password2: repassword
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(errorData => {
+            console.log('Error Response:', errorData);
+            const errors = Object.entries(errorData).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`).join('\n');
+            toast(`Error:\n${errors}`);
+            return {invalid:true};
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.invalid) return;
+        setUser(`${conf.api_url}user/${data.user.pk}`)
+        setSignedIn(true);
+        setToken(data.access)
+        toast('Successfully Registered')
+      })
+
+    })
   }
 
   const [post, setPost] = useState<JovialPostProps[]>([])
@@ -53,6 +150,23 @@ function App() {
       hasFetchedPosts.current = true;
     }
   }, [])
+
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || '')
+    const token = JSON.parse(localStorage.getItem("token") || '')
+    if (user && token) {
+      setUser(user)
+      setToken(token)
+      setSignedIn(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user))
+    localStorage.setItem("token", JSON.stringify(token))
+  }, [user, token])
+
 
   return (
     <>

@@ -25,9 +25,16 @@ SECRET_KEY = 'django-insecure-q2$2yh=bbibb*p+j*u%9z4y#q61h$rj1f03q%worxj1@e%(a+*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "0.0.0.0"]
+ALLOWED_HOSTS = ["localhost"]
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Lax'  # or 'Strict' if frontend and backend are on the same domain
+CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
+
 
 # Application definition
 
