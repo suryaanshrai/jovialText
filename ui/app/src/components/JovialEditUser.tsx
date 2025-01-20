@@ -9,9 +9,54 @@ import { X } from "lucide-react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import useComponentContext from "@/contexts/componentContext"
+import conf from "@/conf/conf"
+import useAuthContext from "@/contexts/authContext"
+import responseHandler from "@/handler/responseHandler"
+import { toast } from "sonner"
+import { useEffect, useRef, useState } from "react"
   
 function JovialEditUser() {
   const {editUserDialog, closeEditUserDialog} = useComponentContext();
+  const {user, token} = useAuthContext();
+
+  const [pic, setpic] = useState("")
+  const [username, setusername] = useState("")
+  const [bio, setbio] = useState("")
+
+  const setUserData = useRef(false);
+
+  useEffect(() => {
+    if (!setUserData.current) {
+      setUserData.current = true
+      fetch(`${user}/`, )
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        setusername(data[0].username)
+        setpic(data[0].pic)
+        setbio(data[0].bio)
+      })
+    }
+  }, [])
+
+  const handlePicForm = (e) => {
+    e.preventDefault();
+    fetch(`${user}`, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        pic: pic
+      })
+
+    }).then(response => responseHandler(response)).then(data => {
+      if (data.invalid) return; toast('Pic Updated Successfully');
+    })
+  }
+
   return (
     // <Dialog open>
     <Dialog open={editUserDialog}>
@@ -37,17 +82,19 @@ function JovialEditUser() {
         <div className="text-center"><img className="inline-block rounded-lg max-w-44 max-h-44" src="https://avatars.githubusercontent.com/u/102371942?v=4" alt="no img"/></div>
         
         <div className="">
+            <form onSubmit={handlePicForm}>
           <div className="flex lg:ml-3 mt-5">
-            <Input placeholder="URL of new pic" />
-            <Button size={"sm"} type="submit">Change Pic</Button>
+              <Input onChange={(e) => {setpic(e.target.value)}} value={pic} placeholder="URL of new pic" />
+              <Button  type="submit">Change Pic</Button>
           </div>
+            </form>
           <div className="flex lg:ml-3 mt-2">
             <Input placeholder="Bio" required/>
-            <Button size={"sm"} type="submit">Change Bio</Button>
+            <Button  type="submit">Change Bio</Button>
           </div>
           <div className="flex lg:ml-3 mt-2">
             <Input placeholder="username" required/>
-            <Button size={"sm"} type="submit">Change Username</Button>
+            <Button  type="submit">Change Username</Button>
           </div>
         </div>
       </div>
@@ -56,7 +103,7 @@ function JovialEditUser() {
         <p className="text-sm">Change Your Password</p>
         <Input className="mt-2" placeholder="new password" type="password" required/>
         <Input className="mt-2" placeholder="confirm" type="password" required/>
-        <Button className="w-full mt-2 " size={"sm"} type="submit">Change Password</Button>
+        <Button className="w-full mt-2 " type="submit">Change Password</Button>
       </div>
     </DialogContent>
   </Dialog>

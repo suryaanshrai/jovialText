@@ -16,6 +16,7 @@ import JovialRegister from './components/JovialRegister'
 import JovialEditUser from './components/JovialEditUser'
 import { AuthProvider } from './contexts/authContext'
 import { toast } from 'sonner'
+import responseHandler from './handler/responseHandler'
 
 function App() {
   const [postDrawer, setOpen] = React.useState(false);const openPostDrawer = () => setOpen(true);const closePostDrawer = () => setOpen(false)
@@ -47,17 +48,7 @@ function App() {
           password: password
         })
       })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(errorData => {
-            console.log('Error Response:', errorData);
-            const errors = Object.entries(errorData).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`).join('\n');
-            toast(`Error:\n${errors}`);
-            return {invalid:true};
-          });
-        }
-        return response.json();
-      })
+      .then(response => responseHandler(response))
       .then(data => {
         if (data.invalid) return;
         setUser(`${conf.api_url}user/${data.user.pk}`)
@@ -88,11 +79,11 @@ function App() {
     })
     .then(data => {
       if (data.invalid) return;
-      setUser("")
-      setSignedIn(false);
-      setToken("")
-      toast('Successfully Logged Out')
     })
+    setUser("")
+    setSignedIn(false);
+    setToken("")
+    toast('Successfully Logged Out')
   }
 
   const register = (username, email, password, repassword) => {
@@ -114,17 +105,7 @@ function App() {
           password2: repassword
         })
       })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(errorData => {
-            console.log('Error Response:', errorData);
-            const errors = Object.entries(errorData).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`).join('\n');
-            toast(`Error:\n${errors}`);
-            return {invalid:true};
-          });
-        }
-        return response.json();
-      })
+      .then(response => responseHandler(response))
       .then(data => {
         if (data.invalid) return;
         setUser(`${conf.api_url}user/${data.user.pk}`)
