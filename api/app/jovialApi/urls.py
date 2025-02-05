@@ -15,4 +15,8 @@ admin.site.site_header = "The Jovial Admin Page"
 
 urlpatterns = [
     path('', include(router.urls), name="api-root"),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('auth/', include('dj_rest_auth.urls')),
+    path('auth/register/', include('dj_rest_auth.registration.urls')),
+    path('auth/google/', views.GoogleLogin.as_view(), name='google_login'),
 ]

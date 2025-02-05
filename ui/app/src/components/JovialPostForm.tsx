@@ -28,11 +28,20 @@ export function JovialPostForm() {
       setJoke(data.joke)
     })
   }
+
+  const googleAuthTest = () => {
+    fetch('https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=http://localhost:5173/&prompt=consent&response_type=code&client_id=4683390329-dtki8jkel6or719qi6fk7qrnp8dvnven.apps.googleusercontent.com&scope=openid%20email%20profile&access_type=offline')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+    })
+  }
   
   const hasFetchedJoke = useRef(false);
   useEffect(() => {
     if (!hasFetchedJoke.current) {
       fetchJoke();
+      googleAuthTest();
       hasFetchedJoke.current = true;
     }
   }, []);
