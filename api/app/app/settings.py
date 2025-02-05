@@ -31,11 +31,6 @@ ALLOWED_HOSTS = ["localhost"]
 CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
-CSRF_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SAMESITE = 'Lax'  # or 'Strict' if frontend and backend are on the same domain
-CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
-
 
 # Application definition
 
@@ -49,19 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'jovialApi',
     'rest_framework',
-    'rest_framework.authtoken',
-    'dj_rest_auth',
-    'allauth', 
-    'allauth.account', 
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.github',
-    'allauth.socialaccount.providers.google',
-    "corsheaders",
-    'rest_framework_swagger', 
+    'corsheaders',
     'drf_spectacular',
 ]
 
-ALLAUTH_UI_THEME = "light"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -73,7 +59,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -103,7 +88,6 @@ AUTH_USER_MODEL = 'jovialApi.User'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 DATABASES = {
@@ -111,11 +95,13 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         'NAME': 'jovial-db',
         'USER': 'root',
-        'HOST': 'jovial-db',
+        # 'HOST': 'jovial-db',
+        'HOST': 'localhost',
         'PORT': 5432,
         'PASSWORD':'root'
     }
 }
+
 
 STORAGES = {
     # ...
@@ -172,20 +158,8 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-}
-
-REST_AUTH = {
-    'USE_JWT': True,
-    'JWT_AUTH_COOKIE': 'my-app-auth',
-    'JWT_AUTH_REFRESH_COOKIE': 'my-refresh-token',    
 }
 
 SPECTACULAR_SETTINGS = {
@@ -193,22 +167,6 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API for the Jovial Text Platform',
     'VERSION': '2.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-}
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'OAUTH_PKCE_ENABLED': True,
-    },
-    'github': {
-        'SCOPE': ['user'],
-    },
 }
 
 

@@ -15,9 +15,4 @@ admin.site.site_header = "The Jovial Admin Page"
 
 urlpatterns = [
     path('', include(router.urls), name="api-root"),
-    path('csrf', views.csrf_token_view, name="csrf_token_view"),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('auth/', include('dj_rest_auth.urls')),
-    path('auth/register/', include('dj_rest_auth.registration.urls')),
-
 ]

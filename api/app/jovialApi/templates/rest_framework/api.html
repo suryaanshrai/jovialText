@@ -23,16 +23,3 @@
         swagger
     </a>
 {% endblock %}
-
-
-
-{% block userlinks %}
-  {% if user.is_authenticated %}
-    {% optional_logout request user csrf_token %}
-  {% else %}
-  <li>
-      <a href="{% url 'account_login' %}">AllAuth</a>
-  </li>
-    {% optional_login request %}
-  {% endif %}
-{% endblock %}

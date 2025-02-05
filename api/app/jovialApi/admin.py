@@ -8,7 +8,7 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['username', 'content']
+    list_display = ['title', 'username', 'time']
     search_fields= ['content']
 
 @admin.register(Follower)
