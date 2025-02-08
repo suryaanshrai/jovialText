@@ -1,16 +1,28 @@
-import { createContext, useContext } from "react";
+import {createContext, useContext} from "react";
 
-export const AuthContext = createContext({
+interface AuthContextProps {
+    user: string;
+    authToken: string;
+    refreshToken: string;
+    signedIn: boolean;
+    login: (username: string, password: string) => void;
+    register: (username: string, password: string) => void;
+    logout: () => void;
+    updateToken: () => void;
+    loadValues: () => void;
+}
+
+export const AuthContext = createContext<AuthContextProps>({
     user: "",
-    token: "",
+    authToken: "",
+    refreshToken: "",
     signedIn: false,
     login: () => {},
-    logout:() => {},
     register: () => {},
+    logout: () => {},
+    updateToken: () => {},
+    loadValues: () => {},
 });
-
-export const AuthProvider = AuthContext.Provider;
-
 
 export default function useAuthContext() {
     return useContext(AuthContext);

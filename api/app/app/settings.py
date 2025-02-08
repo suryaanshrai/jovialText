@@ -104,8 +104,8 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         'NAME': 'jovial-db',
         'USER': 'root',
-        # 'HOST': 'jovial-db',
-        'HOST': 'localhost',
+        'HOST': 'jovial-db',
+        # 'HOST': 'localhost',
         'PORT': 5432,
         'PASSWORD':'root'
     }

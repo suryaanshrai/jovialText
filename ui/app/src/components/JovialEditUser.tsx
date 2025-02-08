@@ -11,9 +11,9 @@ import { Input } from "./ui/input"
 import useComponentContext from "@/contexts/componentContext"
 import conf from "@/conf/conf"
 import useAuthContext from "@/contexts/authContext"
-import responseHandler from "@/handler/responseHandler"
 import { toast } from "sonner"
 import { useEffect, useRef, useState } from "react"
+import useResponseHandler from "@/hooks/useResponseHandler"
   
 function JovialEditUser() {
   const {editUserDialog, closeEditUserDialog} = useComponentContext();
@@ -52,7 +52,7 @@ function JovialEditUser() {
         pic: pic
       })
 
-    }).then(response => responseHandler(response)).then(data => {
+    }).then(response => useResponseHandler(response)).then(data => {
       if (data.invalid) return; toast('Pic Updated Successfully');
     })
   }

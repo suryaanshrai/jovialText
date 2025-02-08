@@ -1,34 +1,33 @@
+import { useState } from "react"
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
+  Dialog,
+  DialogContent,
+  DialogDescription,
     DialogHeader,
     DialogTitle,
   } from "@/components/ui/dialog"
 import { X } from "lucide-react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
+
+import googleLogo from "@/assets/google.png"
 import useComponentContext from "@/contexts/componentContext"
 import useAuthContext from "@/contexts/authContext"
-import { useEffect, useRef, useState } from "react"
   
 function JovialSignIn() {
   const {loginDialog, closeLoginDialog} = useComponentContext();
   const {login} = useAuthContext();
-
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-
-  const handleLogin = (e) => {
-    e.preventDefault()
+  
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     login(username, password);
     closeLoginDialog();
   }
 
-
   return (
     <Dialog open={loginDialog}>
-    {/* <Dialog open={true}> */}
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Sign In</DialogTitle>
@@ -37,22 +36,21 @@ function JovialSignIn() {
         </DialogDescription>
       </DialogHeader>
       <div className="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-      <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8 shrink-0 rounded-full"
-            onClick={closeLoginDialog}
-          >
-            <X />
-            <span className="sr-only">Close</span>
-          </Button>
+      
+      <Button variant="outline" size="icon" className="h-8 w-8 shrink-0 rounded-full" onClick={closeLoginDialog}>
+          <X />
+          <span className="sr-only">Close</span>
+      </Button>
       </div>
-        <div className="text-center"><img className="inline-block rounded-lg max-w-full" src="https://picsum.photos/400"/></div>
-        <form onSubmit={handleLogin}>
+
+      {/* <div className="text-center"><img className="inline-block rounded-lg max-w-full" src="https://random.imagecdn.app/450/200"/></div> */}
+      <form onSubmit={handleLogin}>
         <Input className="my-2" placeholder="username" onChange={(e)=>setUsername(e.target.value)} required/>
         <Input className="mb-2" placeholder="password" onChange={(e)=>setPassword(e.target.value)} type="password" required/>
-        <Button type="submit">Sign in</Button>
-        </form>
+        <Button className="mb-2 w-full" type="submit">Sign in</Button>
+        <div className="text-center text-sm mb-2">or</div>
+        <Button className="mb-2 w-full" type="submit"><img className="w-5" src={googleLogo} /> Sign In using Google</Button>
+      </form>
     </DialogContent>
   </Dialog>
   )

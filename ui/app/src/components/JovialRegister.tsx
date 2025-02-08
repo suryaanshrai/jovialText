@@ -10,6 +10,7 @@ import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import useComponentContext from "@/contexts/componentContext"
 import { useState } from "react"
+import googleLogo  from "@/assets/google.png"
 import useAuthContext from "@/contexts/authContext"
   
 function JovialRegister() {
@@ -47,14 +48,16 @@ function JovialRegister() {
             <span className="sr-only">Close</span>
           </Button>
       </div>
-        <div className="text-center"><img className="inline-block rounded-lg max-w-full" src="https://random.imagecdn.app/400/400"/></div>
+        {/* <div className="text-center"><img className="inline-block rounded-lg max-w-full" src="https://random.imagecdn.app/400/200"/></div> */}
         please register here:
         <form onSubmit={handleRegister}>
           <Input className="mt-2" onChange={(e) => {setUsername(e.target.value)}} placeholder="username" required/>
           <Input className="mt-2" onChange={(e) => {setemail(e.target.value)}} placeholder="email" type="email" required />
           <Input className="mt-2" onChange={(e) => {setpassword(e.target.value)}} placeholder="password" type="password" required/>
           <Input className="mt-2" onChange={(e) => {setrepassword(e.target.value)}} placeholder="password-again" type="password" required/>
-          <Button className="mt-2" type="submit">Register</Button>
+          <Button className="mt-2 w-full" type="submit">Register</Button>
+          <div className="text-center text-sm mb-2">or</div>
+        <Button className="mb-2 w-full" type="submit"><img className="w-5" src={googleLogo} /> Register using Google</Button>
         </form>
         {/* <Input placeholder="profile pic (url)" /> */}
         

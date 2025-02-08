@@ -8,7 +8,6 @@ RUN pip install poetry
 RUN poetry config virtualenvs.create false && poetry lock && poetry install --no-root
 
 COPY app .
-RUN python manage.py migrate
 RUN pip install gunicorn
 
 CMD ["gunicorn", "--reload", "--bind", "localhost:8000", "app.wsgi:application"]

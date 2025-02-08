@@ -110,8 +110,9 @@ class UserViewSet(viewsets.ModelViewSet):
         self.permission_classes = [IsAuthenticated]
         return super().destroy(request, *args, **kwargs)
 
+
+
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 
@@ -143,9 +144,8 @@ class CustomOAuth2Client(OAuth2Client):
 
 class GoogleLogin(SocialLoginView): 
     """
-    Google Authentications
+    Authentication using Google OAuth2. Post your obtained code here to register/login.
     """
     adapter_class = GoogleOAuth2Adapter
     callback_url = 'http://localhost:5173/'
     client_class = CustomOAuth2Client
-    # client_class = OAuth2Client

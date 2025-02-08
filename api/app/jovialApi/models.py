@@ -29,10 +29,21 @@ class Post(models.Model):
     content = models.TextField(max_length=2048)
     pic = models.URLField(blank=True, validators=[validate_image_url])
     time = models.DateTimeField(auto_now_add=True)
-    # tag = models.CharField(max_length=50, blank=True)
+
+    STATUS_CHOICES = [
+        ('PUB', 'Published'),
+        ('SCH', 'Scheduled'),
+        ('ACH', 'Archived'),
+    ]
+    status = models.CharField(choices=STATUS_CHOICES, default='PUB')
 
     def __str__(self):
         return f'{self.content}'
+    
+    
+class Tag(models.Model):
+    tag = models.CharField(max_length=50)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
 
 class Like(models.Model):
@@ -60,3 +71,4 @@ class Follower(models.Model):
 
     def __str__(self):
         return f"{self.username} follows {self.follow}"
+    

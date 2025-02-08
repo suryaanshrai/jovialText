@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 
-export default function responseHandler(response: { ok: any; json: () => Promise<any>; }) {
+export default function useResponseHandler(response: { ok: any; json: () => Promise<any>; }) {
     if (!response.ok) {
         return response.json().then(errorData => {
           console.log('Error Response:', errorData);
