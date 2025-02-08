@@ -11,7 +11,6 @@ import conf from './conf/conf'
 import JovialSignIn from './components/JovialSignIn'
 import JovialRegister from './components/JovialRegister'
 import JovialEditUser from './components/JovialEditUser'
-import AuthProvider from './contexts/authContextProvider'
 import ComponentProvider from './contexts/componentContextProvider'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import useAuthContext from './contexts/authContext'

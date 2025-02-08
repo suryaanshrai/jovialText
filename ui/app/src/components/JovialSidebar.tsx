@@ -7,6 +7,10 @@ import JovialUserCard from './JovialUserCard'
 import { useEffect, useState } from 'react'
 import useComponentContext from '@/contexts/componentContext'
 import useAuthContext from '@/contexts/authContext'
+import useAuthFetch from '@/hooks/useAuthFetch'
+import conf from '@/conf/conf'
+import { toast } from 'sonner'
+import useResponseHandler from '@/hooks/useResponseHandler'
 
 function JovialSidebar() {
 
@@ -22,6 +26,23 @@ function JovialSidebar() {
     }, 1000);
   }, [])
 
+  const onPositivePostClick = () => {
+    useAuthFetch(`${conf.api_url}auth/token/verify/`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        token: localStorage.getItem('jovialAuthToken')
+      })
+    })
+    .then(response => useResponseHandler(response))
+    .then(data => {
+      console.log(data)
+    })
+  }
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -34,7 +55,7 @@ function JovialSidebar() {
         ):
         <></>}
         <SidebarMenuButton onClick={openSearchDialog}> <Search /> Search</SidebarMenuButton>
-        <SidebarMenuButton> <Star /> Positive Posts</SidebarMenuButton>
+        <SidebarMenuButton onClick={onPositivePostClick}> <Star /> Positive Posts</SidebarMenuButton>
         {signedIn?(<>
           <SidebarMenuButton> <Globe /> Following</SidebarMenuButton>
           <SidebarMenuButton> <Heart /> Liked Posts</SidebarMenuButton>

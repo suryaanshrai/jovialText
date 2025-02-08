@@ -15,6 +15,7 @@ import useComponentContext from "@/contexts/componentContext"
 import conf from "@/conf/conf"
 import useAuthContext from "@/contexts/authContext"
 import useResponseHandler from "@/hooks/useResponseHandler"
+import useAuthFetch from "@/hooks/useAuthFetch"
 
 
 export function JovialPostForm() { 
@@ -39,16 +40,16 @@ export function JovialPostForm() {
 
   
   const {postDrawer, closePostDrawer} = useComponentContext();
-  const {user, authToken} = useAuthContext();
+  const {user} = useAuthContext();
   const submitFormPost = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     toast('Posting...')
-    fetch(`${conf.api_url}post/`, {
+    
+    useAuthFetch(`${conf.api_url}post/`, {
       method: 'POST',
       headers: {
         'accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`
       },
       body : JSON.stringify({
         username: `${user}/`,
@@ -62,6 +63,9 @@ export function JovialPostForm() {
       if (data.invalid) return;
       toast("Post published Successfully. Thanks for sharing!");
       closePostDrawer();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     })
   }
 
