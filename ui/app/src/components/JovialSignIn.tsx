@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -13,18 +13,22 @@ import { Input } from "./ui/input"
 import googleLogo from "@/assets/google.png"
 import useComponentContext from "@/contexts/componentContext"
 import useAuthContext from "@/contexts/authContext"
+import useGoogleAuth from "@/hooks/useGoogleAuth"
   
 function JovialSignIn() {
   const {loginDialog, closeLoginDialog} = useComponentContext();
-  const {login} = useAuthContext();
+  const {login, signedIn} = useAuthContext();
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     login(username, password);
-    closeLoginDialog();
   }
+
+  useEffect(() => {
+    if (signedIn) closeLoginDialog();
+  }, [signedIn])
 
   return (
     <Dialog open={loginDialog}>
@@ -49,8 +53,8 @@ function JovialSignIn() {
         <Input className="mb-2" placeholder="password" onChange={(e)=>setPassword(e.target.value)} type="password" required/>
         <Button className="mb-2 w-full" type="submit">Sign in</Button>
         <div className="text-center text-sm mb-2">or</div>
-        <Button className="mb-2 w-full" type="submit"><img className="w-5" src={googleLogo} /> Sign In using Google</Button>
       </form>
+        <Button className="mb-2 w-full" onClick={() => useGoogleAuth()}><img className="w-5" src={googleLogo} /> Sign In using Google</Button>
     </DialogContent>
   </Dialog>
   )

@@ -4,7 +4,7 @@ interface AuthContextProps {
     user: string;
     signedIn: boolean;
     login: (username: string, password: string) => void;
-    register: (username: string, password: string) => void;
+    register: (username: string, email: string, password1: string, password2: string) => void;
     logout: () => void;
     loadValues: () => void;
 }

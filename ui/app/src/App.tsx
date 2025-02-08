@@ -14,6 +14,7 @@ import JovialEditUser from './components/JovialEditUser'
 import ComponentProvider from './contexts/componentContextProvider'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import useAuthContext from './contexts/authContext'
+import useGoogleAuth from './hooks/useGoogleAuth'
 
 function App() {
 
@@ -37,6 +38,18 @@ function App() {
       hasLoadedValues.current = true
     }
   }, [])
+
+  const hasCheckedAuth = useRef(false);
+  useEffect(() => {
+    if (!hasCheckedAuth.current) {
+      hasCheckedAuth.current = true;
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (code) {
+        useGoogleAuth(code);
+      }
+    }
+  })
 
   return (
     <>

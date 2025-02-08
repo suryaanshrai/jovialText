@@ -17,7 +17,7 @@ function JovialSearchBox() {
         <DialogHeader>
           <DialogTitle>Search</DialogTitle>
           <DialogDescription>
-              Find posts containing any of these words, even if they're part of a larger word. Use commas to search for multiple words.
+              Find posts with these tags. 
           </DialogDescription>
         </DialogHeader>
         <div className="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">

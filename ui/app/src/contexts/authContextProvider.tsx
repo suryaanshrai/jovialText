@@ -60,12 +60,36 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
             localStorage.removeItem('jovialRefreshToken');
 
             toast('Successfully Logged Out')
+            window.location.reload();
         })
     }
 
-
-    const register = (username: string, password: string) => {
-        toast('Not Implemented Yet')
+    const register = (username: string, email: string, password1: string, password2: string) => {
+        toast('Registering you in')
+        fetch(`${conf.api_url}auth/register/`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                email: email,
+                password1: password1,
+                password2: password2
+            })
+        })
+        .then(response => useResponseHandler(response))
+        .then(data => {
+            if (data.invalid) return;
+            setUser(`${conf.api_url}user/${data.user.pk}`)
+            setSignedIn(true);
+            
+            localStorage.setItem('jovialUser', `${conf.api_url}user/${data.user.pk}`);
+            localStorage.setItem('jovialAuthToken', data.access);
+            localStorage.setItem('jovialRefreshToken', data.refresh);
+            toast('Successfully Registered')
+        })
     }
 
 
