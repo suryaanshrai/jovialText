@@ -10,4 +10,4 @@ RUN poetry config virtualenvs.create false && poetry lock && poetry install --no
 COPY app .
 RUN pip install gunicorn
 
-CMD ["gunicorn", "--reload", "--bind", "localhost:8000", "app.wsgi:application"]
+CMD ["gunicorn", "--reload", "--bind", "0.0.0.0:8000", "app.wsgi:application"]

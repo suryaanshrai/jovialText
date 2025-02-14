@@ -2,7 +2,7 @@ import { toast } from 'sonner'
 import JovialUserCard from './JovialUserCard'
 import { Button } from './ui/button'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from './ui/card'
-import { Pen, ThumbsUp, Trash } from 'lucide-react'
+import { ThumbsUp, Trash } from 'lucide-react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -75,7 +75,7 @@ function JovialPost({
     </>
   )
 
-  const formatDate = (isoDateString) => {
+  const formatDate = (isoDateString: string | number | Date) => {
     const date = new Date(isoDateString);
     return date.toLocaleString("en-US", {
       year: "numeric",

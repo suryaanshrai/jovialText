@@ -1,5 +1,5 @@
 from django.contrib.auth.models import Group
-from .models import User, Post, Like, Follower
+from .models import User, Post, Like, Follower, Reply, Tag, Mention
 from rest_framework import serializers
 
 
@@ -15,20 +15,37 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'name']
 
 
-class PostSerializer(serializers.HyperlinkedModelSerializer):
+class PostListSerializer(serializers.HyperlinkedModelSerializer):
+    like_count = serializers.ReadOnlyField(source='get_like_count')
+    
     class Meta:
         model = Post
-        fields = ['url','id','username', 'content', 'pic', 'time', 'title']
+        fields = ['url', 'id', 'created', 'username', 'title', 'content', 'pic', 'sentiment', 'like_count']
+        
+# class PostDetailSerializer(serializers.HyperlinkedModelSerializer):
+#     replies = serializers.SerializerMethodField
+    
+#     class Meta:
+#         model = Post
+#         fields = ['url', 'id', 'created', 'username', 'title', 'content', 'pic', 'sentiment', 'like_count', 'replies']
+    
+#     def get_replies(self, obj):
+#         replies = obj.get_replies()
+#         return ReplySerializer(replies, many)
 
 
 class LikeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Like
-        # Remove id as an feild in production
-        fields = ['url','id','post']
+        fields = ['url','post']
 
 
 class FollowerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Follower
-        fields = ['url','follow']
+        fields = ['url','follow', 'created']
+        
+class ReplySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Reply
+        fields = ['url', 'username', 'post', 'content', 'created']

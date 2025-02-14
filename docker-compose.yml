@@ -5,6 +5,8 @@ services:
       context: "./api"
     volumes:
       - ./api/app:/app
+    environment:
+      - DB_HOST=jovial-db
     healthcheck:
       test: "exit 0"
     depends_on:

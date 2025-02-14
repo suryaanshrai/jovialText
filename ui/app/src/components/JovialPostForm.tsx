@@ -16,6 +16,7 @@ import conf from "@/conf/conf"
 import useAuthContext from "@/contexts/authContext"
 import useResponseHandler from "@/hooks/useResponseHandler"
 import useAuthFetch from "@/hooks/useAuthFetch"
+import { useLocation } from "react-router-dom"
 
 
 export function JovialPostForm() { 
@@ -39,7 +40,12 @@ export function JovialPostForm() {
   const [pic, setpic] = useState("")
 
   
-  const {postDrawer, closePostDrawer} = useComponentContext();
+  const {postDrawer, closePostDrawer, openPostDrawer} = useComponentContext();
+  const location = useLocation()
+  if (location === "/post") {
+    openPostDrawer();
+  }
+
   const {user} = useAuthContext();
   const submitFormPost = (e: { preventDefault: () => void }) => {
     e.preventDefault();

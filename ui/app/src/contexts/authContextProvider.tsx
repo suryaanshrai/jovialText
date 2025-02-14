@@ -50,18 +50,16 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
             }
         })
         .then(response => useResponseHandler(response))
-        .then(data => {
-            if (data.invalid) return;
-            setUser("");
-            setSignedIn(false);
-
-            localStorage.removeItem('jovialUser');
-            localStorage.removeItem('jovialAuthToken');
-            localStorage.removeItem('jovialRefreshToken');
-
+        .then(() => {
             toast('Successfully Logged Out')
             window.location.reload();
-        })
+        });
+        
+        setUser("");
+        setSignedIn(false);
+        localStorage.removeItem('jovialUser');
+        localStorage.removeItem('jovialAuthToken');
+        localStorage.removeItem('jovialRefreshToken');
     }
 
     const register = (username: string, email: string, password1: string, password2: string) => {
@@ -99,8 +97,15 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
         const userRefreshToken = localStorage.getItem('jovialRefreshToken');
 
         if (userItem && userItem !== "" && userAuthToken && userAuthToken !== "" && userRefreshToken && userRefreshToken !== "") {
-            setUser(userItem);
-            setSignedIn(true);
+            fetch(userItem)
+            .then(response => {
+                if (response.status != 404) {
+                    setUser(userItem);
+                    setSignedIn(true);
+                } else {
+                    logout();
+                }
+            })
         }
     }
 

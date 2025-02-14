@@ -1,18 +1,19 @@
-from django.contrib.auth.models import Group
-from rest_framework import permissions, viewsets, generics
+from django.http import JsonResponse
+from rest_framework import permissions, viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
-
+from rest_framework.pagination import CursorPagination
 from .models import User, Follower, Like, Post
 
-from jovialApi.serializers import UserSerializer, PostSerializer, FollowerSerializer, LikeSerializer
+from jovialApi.serializers import UserSerializer, PostListSerializer, FollowerSerializer, LikeSerializer
+
 
 
 class LikeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows likes to be viewed or edited.
     """
-    queryset = Like.objects.all()
+    queryset = Like.objects.all().order_by('-created')
     serializer_class = LikeSerializer
     permission_classes = [IsAuthenticated]
 
@@ -23,11 +24,12 @@ class LikeViewSet(viewsets.ModelViewSet):
         serializer.save(username=self.request.user)
 
 
+
 class FollowerViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows followers to be viewed or edited.
     """
-    queryset = Follower.objects.all()
+    queryset = Follower.objects.all().order_by('-created')
     serializer_class = FollowerSerializer
     permission_classes = [IsAuthenticated]
 
@@ -37,37 +39,43 @@ class FollowerViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(username=self.request.user)
         
+        
+        
+        
+class IsPostOwnerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.username.id == request.user.id
 
+class PostPagination(CursorPagination):
+    page_size=10
+    
+    
 class PostViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows posts to be viewed or edited.
     """
-    queryset = Post.objects.all().order_by('-time')
-    serializer_class = PostSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-
+    queryset = Post.objects.all().order_by('-created')
+    permission_classes = [IsAuthenticatedOrReadOnly, IsPostOwnerOrReadOnly]
+    pagination_class = PostPagination
+    
+    def get_serializer_class(self):
+        # if self.action == 'retrieve':
+        #     return PostDetailSerializer
+        return PostListSerializer
+        
+    
     def perform_create(self, serializer):
         serializer.save(username=self.request.user)
 
-    def update(self, request, *args, **kwargs):
-        post = self.get_object()
-        if request.user != post.username:
-            raise PermissionDenied("You do not have permission to edit this post.")
-        return super().update(request, *args, **kwargs)
-
-    def partial_update(self, request, *args, **kwargs):
-        post = self.get_object()
-        if request.user != post.username:
-            raise PermissionDenied("You do not have permission to edit this post.")
-        return super().partial_update(request, *args, **kwargs)
-
-    def destroy(self, request, *args, **kwargs):
-        post = self.get_object()
-        if request.user != post.username:
-            raise PermissionDenied("You do not have permission to delete this post.")
-        return super().destroy(request, *args, **kwargs)
 
 
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.id == request.user.id
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -75,7 +83,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def get_queryset(self,):
         if self.action == 'list':
@@ -84,31 +92,21 @@ class UserViewSet(viewsets.ModelViewSet):
             return User.objects.none()
         return User.objects.all()
 
-    def retrieve(self, request, *args, **kwargs):
-        self.permission_classes = [permissions.AllowAny]
-        return super().retrieve(request, *args, **kwargs)
-
     def create(self, request, *args, **kwargs):
         raise PermissionDenied("You do not have permission to create a new user.")
 
-    def update(self, request, *args, **kwargs):
-        if str(request.user.id) != kwargs['pk']:
-            raise PermissionDenied("You do not have permission to edit this user.")
-        self.permission_classes = [IsAuthenticated]
-        return super().update(request, *args, **kwargs)
 
-    def partial_update(self, request, *args, **kwargs):
-        if str(request.user.id) != kwargs['pk']:
-            raise PermissionDenied("You do not have permission to edit this user.")
-        self.permission_classes = [IsAuthenticated]
-        return super().partial_update(request, *args, **kwargs)
 
-    def destroy(self, request, *args, **kwargs):
-        if str(request.user.id) != kwargs['pk']:
-            print(type(request.user.id) , type(kwargs['pk']))
-            raise PermissionDenied("You do not have permission to delete this user.")
-        self.permission_classes = [IsAuthenticated]
-        return super().destroy(request, *args, **kwargs)
+
+class PositivePostsPagination(CursorPagination):
+    page_size = 10
+    ordering = '-sentiment'
+
+class PositivePostsViewset(viewsets.ReadOnlyModelViewSet):
+    queryset = Post.objects.all().order_by('-sentiment')
+    serializer_class = PostListSerializer
+    pagination_class = PositivePostsPagination
+
 
 
 
@@ -147,5 +145,5 @@ class GoogleLogin(SocialLoginView):
     Authentication using Google OAuth2. Post your obtained code here to register/login.
     """
     adapter_class = GoogleOAuth2Adapter
-    callback_url = 'http://localhost:5173/'
+    callback_url = 'http://localhost:5173/auth/google/'
     client_class = CustomOAuth2Client
