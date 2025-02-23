@@ -17,7 +17,9 @@ function JovialSearchBox() {
         <DialogHeader>
           <DialogTitle>Search</DialogTitle>
           <DialogDescription>
-              Find posts with these tags. 
+            <p>Find posts with these tags.</p>
+            <p>Use "@username" to search for a user</p>
+            <p>Use "#tag" to search for posts with a tag</p>
           </DialogDescription>
         </DialogHeader>
         <div className="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">

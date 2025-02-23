@@ -1,7 +1,7 @@
 import './App.css'
 import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
-import {JovialSidebar, ModeToggle} from "./components/index"
-import  { useEffect, useRef } from 'react'
+import { JovialSidebar, ModeToggle } from "./components/index"
+import { useEffect, useRef } from 'react'
 import { JovialPostForm } from './components/JovialPostForm'
 import JovialSearchBox from './components/JovialSearchBox'
 import { Toaster } from './components/ui/sonner'
@@ -12,30 +12,34 @@ import ComponentProvider from './contexts/componentContextProvider'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import useAuthContext from './contexts/authContext'
 import useGoogleAuth from './hooks/useGoogleAuth'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 
 function App() {
 
-  const {loadValues} = useAuthContext();
-  const hasLoadedValues = useRef(false);
-  useEffect(() => {
-    if (!hasLoadedValues.current) {
-      loadValues();
-      hasLoadedValues.current = true
-    }
-  }, [])
+  const { loadValues } = useAuthContext();
 
-  const hasCheckedAuth = useRef(false);
+  const initialLoad = useRef(false);
   useEffect(() => {
-    if (!hasCheckedAuth.current) {
-      hasCheckedAuth.current = true;
+    if (!initialLoad.current) {
+      initialLoad.current = true;
+      
+      // 1. Checks if GoogleAuth credentials are there
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
       if (code) {
         useGoogleAuth(code);
       }
+      
+      // 2. Loads current user if exists
+      loadValues();
     }
   })
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <>
@@ -50,23 +54,23 @@ function App() {
 
       <ComponentProvider>
 
-      <div className='absolute top-2 right-4'> <ModeToggle /> </div>
+        <div className='absolute top-2 right-4'> <ModeToggle /> </div>
 
-      <JovialPostForm />
-      <JovialSearchBox />
-      <JovialSignIn />
-      <JovialRegister />
-      <JovialEditUser />
+        <JovialPostForm />
+        <JovialSearchBox />
+        <JovialSignIn />
+        <JovialRegister />
+        <JovialEditUser />
 
-      <SidebarProvider>
-        <JovialSidebar />
-        <SidebarTrigger  />
+        <SidebarProvider>
+          <JovialSidebar />
+          <SidebarTrigger />
 
-        <Outlet />
+          <Outlet />
 
-      </SidebarProvider>
+        </SidebarProvider>
       </ComponentProvider>
-          <Toaster />
+      <Toaster />
     </>
   )
 }

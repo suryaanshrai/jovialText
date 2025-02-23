@@ -106,6 +106,24 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
                     logout();
                 }
             })
+            fetch(`${conf.api_url}auth/token/refresh/`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    refresh: userRefreshToken
+                })
+            })
+            .then(response => useResponseHandler(response))
+            .then(data => {
+                if (data.invalid) {
+                    logout();
+                    return;
+                };
+                localStorage.setItem('jovialAuthToken', data.access);
+            })
         }
     }
 

@@ -1,5 +1,5 @@
 db/
 __pycache__/
-api/app/jovialApi/migrations
-api/app/staticfiles
+temp/
 trash/
+migrations/

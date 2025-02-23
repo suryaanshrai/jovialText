@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Define the base URL for the API
+BASE_URL="http://localhost:8000"
+
 while true; do
     # Prompt the user to enter a username
     echo "Username: "
@@ -7,7 +10,7 @@ while true; do
 
     # Register the user and capture the response
     RESPONSE=$(curl -s -w "\n%{http_code}" -X 'POST' \
-       'http://localhost:8000/auth/register/' \
+       "$BASE_URL/auth/register/" \
         -H 'accept: application/json' \
         -H 'Content-Type: application/json' \
         -d "{
@@ -35,7 +38,7 @@ while true; do
         TITLE=$(echo "$RESPONSE_JSON" | jq -r '.data[0].title' | sed 's/"/\\"/g')
 
         curl -s -o /dev/null -X 'PATCH' \
-          "http://localhost:8000/user/$USER_ID/" \
+          "$BASE_URL/user/$USER_ID/" \
           -H 'accept: application/json' \
           -H 'Content-Type: application/json' \
           -H "Authorization: Bearer $AUTH_TOKEN" \
@@ -82,12 +85,12 @@ for i in {1..50}; do
 
     # Make a POST request to create a new post and capture the response
     RESPONSE=$(curl -s -w "\n%{http_code}" -X 'POST' \
-    'http://localhost:8000/post/' \
+    "$BASE_URL/post/" \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
     -H "Authorization: Bearer $AUTH_TOKEN" \
     -d "{
-        \"username\": \"http://localhost:8000/user/$USER_ID/\",
+        \"username\": \"$BASE_URL/user/$USER_ID/\",
         \"title\": \"$TITLE\",
         \"content\": \"$CONTENT\",
         \"pic\": \"$PIC_URL\"
@@ -104,8 +107,6 @@ for i in {1..50}; do
         echo "Failed to create Post $i: $RESPONSE_BODY"
     fi
 done
-
-
 
 # Indicate that the script has finished executing
 echo "Script executed"

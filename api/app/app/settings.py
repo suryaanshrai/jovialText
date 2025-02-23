@@ -103,11 +103,11 @@ AUTHENTICATION_BACKENDS = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        'NAME': 'jovial-db',
-        'USER': 'root',
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': 5432,
-        'PASSWORD':'root'
+        'NAME': os.environ.get('DB_NAME'), 
+        'USER': os.environ.get('DB_USER'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
     }
 }
 

@@ -1,0 +1,62 @@
+services:
+  api:
+    container_name: jovial-api
+    image: suryaanshrai515/jovial-api:latest
+    environment:
+      - DB_HOST=jovial-db
+      - DB_PORT=5432
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=jovial-db
+    healthcheck:
+      test: "exit 0"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 8000:8000
+    networks:
+      - jovial-network
+
+  db:
+    container_name: jovial-db
+    image: postgres:latest
+    volumes:
+      - ./db/db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: jovial-db
+    networks:
+     - jovial-network
+    healthcheck:
+      test: "exit 0"
+
+  ui:
+    container_name: jovial-ui
+    image: suryaanshrai515/jovial-ui:latest
+    ports:
+      - 5173:5173
+    networks:
+     - jovial-network
+    healthcheck:
+      test: "exit 0"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  ready:
+    image: busybox
+    container_name: jovial-ready
+    command: wget -qO - https://raw.githubusercontent.com/suryaanshrai/jovialText/refs/heads/v2/jovial-text-is-up.txt | cat
+    depends_on:
+      ui:
+        condition: service_healthy
+    networks:
+     - jovial-network
+
+networks:
+  jovial-network:
+    name: jovial-network

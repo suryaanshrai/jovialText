@@ -14,13 +14,12 @@ def validate_image_url(value):
             raise ValidationError('The URL must point to a valid image.')
     except requests.RequestException:
         raise ValidationError('Could not validate the image URL.')
-    
 
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bio = models.TextField(max_length=128, blank=True)
     pic = models.URLField(blank=True, validators=[validate_image_url])
-
+    created = models.DateTimeField(auto_now_add=True)
 
 class Follower(models.Model):
     username = models.ForeignKey(
@@ -37,7 +36,6 @@ class Follower(models.Model):
     def __str__(self):
         return f"{self.username} -> {self.follow}"
 
-
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -52,7 +50,7 @@ class Post(models.Model):
         ('SCH', 'Scheduled'),
         ('ACH', 'Archived'),
     ]
-    status = models.CharField(choices=STATUS_CHOICES, default='PUB')
+    status = models.CharField(max_length=3, choices=STATUS_CHOICES, default='PUB')
 
     def get_like_count(self,):
         return Like.objects.filter(post=self).count()
@@ -77,7 +75,6 @@ class Post(models.Model):
     def __str__(self):
         return f'{self.title}'
 
-
 class Reply(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -95,7 +92,9 @@ class Reply(models.Model):
                 username=User.objects.get(username=self.username), 
                 mention=User.objects.get(username=mention),
                 post=self.post)
-
+    
+    def __str__(self):
+        return f'{self.username} replied to {self.post.username}'
 
 class Mention(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE, related_name="mentioned_by")
@@ -103,14 +102,13 @@ class Mention(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
-
 class Tag(models.Model):
     tag = models.CharField(max_length=100)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.tag
-
 
 class Like(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -119,10 +117,22 @@ class Like(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = [
-            ('username', 'post'),
-            ('username', 'reply')
+        constraints = [
+            models.UniqueConstraint(fields=['username', 'post'], name='unique_user_post_like'),
+            models.UniqueConstraint(fields=['username', 'reply'], name='unique_user_reply_like'),
         ]
 
+    def clean(self):
+        if self.post and self.reply:
+            raise ValidationError('A like can be associated with either a post or a reply, but not both.')
+        if not self.post and not self.reply:
+            raise ValidationError('A like must be associated with either a post or a reply.')
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.username} likes {self.post}"
+        if self.post:
+            return f"{self.username} likes post {self.post}"
+        return f"{self.username} likes reply {self.reply}"

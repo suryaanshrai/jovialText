@@ -15,23 +15,13 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'name']
 
 
-class PostListSerializer(serializers.HyperlinkedModelSerializer):
+class PostSerializer(serializers.HyperlinkedModelSerializer):
     like_count = serializers.ReadOnlyField(source='get_like_count')
     
     class Meta:
         model = Post
         fields = ['url', 'id', 'created', 'username', 'title', 'content', 'pic', 'sentiment', 'like_count']
-        
-# class PostDetailSerializer(serializers.HyperlinkedModelSerializer):
-#     replies = serializers.SerializerMethodField
     
-#     class Meta:
-#         model = Post
-#         fields = ['url', 'id', 'created', 'username', 'title', 'content', 'pic', 'sentiment', 'like_count', 'replies']
-    
-#     def get_replies(self, obj):
-#         replies = obj.get_replies()
-#         return ReplySerializer(replies, many)
 
 
 class LikeSerializer(serializers.HyperlinkedModelSerializer):

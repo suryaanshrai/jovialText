@@ -1,4 +1,5 @@
 import conf from "@/conf/conf";
+import { toast } from "sonner";
 
 export default async function useAuthFetch(url: string, body: RequestInit) {
     let authToken = localStorage.getItem('jovialAuthToken');
@@ -35,7 +36,8 @@ export default async function useAuthFetch(url: string, body: RequestInit) {
             authToken = data.access;
             localStorage.setItem('jovialAuthToken', authToken || "");
         } else {
-            throw new Error('Invalid refresh token');
+            toast.error('Logout and login again');
+            throw new Error('Invalid refresh token. Login again');
         }
     }
 
